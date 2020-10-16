@@ -30,6 +30,7 @@
             <div style="background-color: #2BBBAD" class="nav-wrapper">
                 <a href="#!" class="brand-logo">OLC2 P1 2S2020</a>
                 <ul class="right hide-on-med-and-down">
+                    <li><a id="go-to-c3d">C3D</a></li>
                     <li><a id="go-to-console">Console</a></li>
                     <li><a id="go-to-errors">Errors</a></li>
                     <li><a id="go-to-text-editor">Text Editor</a></li>
@@ -45,7 +46,8 @@
                 <div style="height: 80vh" id="textarea">aver</div>
             </div>
             <div style="text-align: center" class="input-field col s12 m2 l2">
-                <button id="translate" style="width: 80%; margin-top: 30vh" class="btn">Translate</button>
+                <button id="translate" style="width: 80%; margin-top: 25vh" class="btn">Translate</button>
+                <button id="translate-c3d" style="width: 80%; margin-top: 5vh" class="btn">Gen 3D</button>
                 <button id="run" style="width: 80%; margin-top: 5vh" class="btn">Run</button>
                 <div class="input-field"
                      style="background-color: white; width: 80%; margin-left: 10%; border-radius: 5px; border: none; ">
@@ -61,6 +63,16 @@
             </div>
             <div class="input-field col s12 m5 l5">
                 <textarea style="height: 80vh; color: white" rows="10" id="translated" disabled></textarea>
+            </div>
+            <div style="padding-top: 7vh" id="C3D-header" class="input-field col s12">
+                <h4 style="background-color: #2BBBAD; color: white; padding-top: 0.3em; padding-bottom: 0.3em">
+                    C3D</h4>
+                <textarea disabled
+                          style="height: 65vh; background-color: #2E3440; color: #FFF; font-family: casadia; white-space: pre-wrap;"
+                          rows="10"
+                          id="c3d"></textarea>
+                <p style="color: white"><b>NOTE</b>: For execute this Code go to this <a
+                        href="./graph.html">LINK</a>, and CTRL+V on the text editor.</p>
             </div>
             <div style="padding-top: 7vh" id="console-header" class="input-field col s12">
                 <h4 style="background-color: #2BBBAD; color: white; padding-top: 0.3em; padding-bottom: 0.3em">
@@ -123,20 +135,7 @@
         editor.setValue('' +
             'let a = 5;\n' +
             '\n' +
-            'function suma(a, b){\n' +
-            '    let r = \'hola mundo\';\n' +
-            '    return a+b;\n' +
-            '}\n' +
-            '\n' +
-            'let c = suma(4,5);\n' +
-            '\n' +
-            'console.log(c);\n' +
-            '\n' +
-            'for(let b = 10; b<=20; a++){\n' +
-            '    console.log(a);\n' +
-            '    if(a%2 == 0)\n' +
-            '        b += a;\n' +
-            '}');
+            'console.log(a);');
 
 
         const scrollFactor = 500;
@@ -159,9 +158,20 @@
             }, scrollFactor);
         }
 
+        function scrollToC3D() {
+            $('html, body').animate({
+                scrollTop: $("#C3D-header").offset().top
+            }, scrollFactor);
+        }
+
         $('#go-to-console').click((e) => {
             e.preventDefault();
             scrollToConsole();
+        });
+
+        $('#go-to-c3d').click((e) => {
+            e.preventDefault();
+            scrollToC3D();
         });
 
         $('#go-to-text-editor').click((e) => {
@@ -172,6 +182,64 @@
         $('#go-to-errors').click((e) => {
             e.preventDefault();
             scrollToErrors();
+        });
+
+        $('#translate-c3d').click((e) => {
+            e.preventDefault();
+
+            ast.ErrorsControl.clearStructures();
+            function setErrors() {
+                const table = $('#table-body');
+                ast.ErrorsControl.GetErrors().forEach((error, index) => {
+                    table.append
+                    (
+                        `<tr>
+                            <td>${index+1}</td>
+                            <td>${error.typo}</td>
+                            <td>${error.row}</td>
+                            <td>${error.column}</td>
+                            <td>${error.expected}</td>
+                            <td>${error.obtained}</td>
+                        </tr>`
+                    );
+                });
+            }
+
+            let c = $('#c3d');
+            c.text('');
+            let TXT = ast.TranslateStringsCompose(editor.getValue());
+            $('#translated').val(TXT);
+            ast.ErrorsControl.clearStructures();
+            let sentences = [];
+            try {
+                sentences = calc.parse(TXT);
+            } catch (e) {
+                console.log(e);
+                let error = e.toString().split('\n');
+                let typo = '';
+                if (error[3].endsWith("got 'INVALID'")) {
+                    typo = 'LEXICON';
+                } else {
+                    typo = 'SYNTACTIC';
+                }
+                let index = 0;
+                const row = error[0].replace('Error: Parse error on line ', '').replace(':', '');
+                const column = error[2].length - 1;
+                const obtained = error[1].charAt(error[2].length - 1);
+                const expected = error[3].replace('Expecting ', '').split(', ').filter(st => st.toString().startsWith('got') ? '' : st).join(', ');
+                ast.ErrorsControl.AddError(row, column, expected, obtained, typo);
+            }
+            const c3d = ast.GetC3DCode(sentences);
+            c.html(c3d);
+            let errors = ast.ErrorsControl.GetErrors();
+            if (errors.length > 0) {
+                setErrors();
+                scrollToErrors();
+            } else {
+                scrollToC3D();
+            }
+
+
         });
 
         $('#run').click((e) => {

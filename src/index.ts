@@ -63,6 +63,8 @@ import {FunctionCallNode} from "./nodes/FunctionCallNode";
 import {TSGraphControl} from "./utils/TSGraphControl";
 import {NodesControl} from "./utils/NodesControl";
 import { ErrorsControl } from "./utils/ErrorsControl";
+import {Lbl} from "./utils/C3D/Lbl";
+import {Tmp} from "./utils/C3D/Tmp";
 
 export {
     Console,
@@ -164,6 +166,17 @@ export function ExecuteAST(sentences: Array<Op>) {
         if(win !== null)
             win.focus();
     }
+}
+
+export function GetC3DCode(sentences: Array<Op>): string {
+    Lbl.resetCount();
+    Tmp.resetCount();
+    const tmps = Tmp.getCount();
+    let CCode = "";
+    CCode += "#include <stdio.h> //Importar para el uso de Printf";
+
+
+        return CCode;
 }
 
 export function GraphAST(sentences: Array<Op>): string {
