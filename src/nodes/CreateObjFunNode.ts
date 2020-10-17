@@ -5,8 +5,12 @@ import {Cntnr} from "../utils/Cntnr";
 import {FunctionRepresent} from "../utils/functions/FunctionRepresent";
 import {ReturnObj} from "./ReturnObj";
 import {GraphvizNode} from "../utils/GraphvizNode";
+import { Code } from "../utils/C3D/Code";
 
-export class CreateObjFunNode extends Op{
+export class CreateObjFunNode extends Op {
+    public GOCode(env: Envmnt): Code {
+        throw new Error("Method not implemented.");
+    }
     private readonly object: Op;
     private readonly funId: string;
     private readonly args: Array<Op>;

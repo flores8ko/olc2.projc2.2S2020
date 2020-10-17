@@ -18,18 +18,22 @@ export class Code {
     }
 
     public appendLine(line: string, comment: string = "") {
-        this.lines.push(`${line} \t// ${comment}`);
+        comment = comment !== "" ? `\t// ${comment}` : "";
+        this.lines.push(`${line} ${comment}`);
     }
 
     public appendSplitComment(comment: string) {
-        this.lines.push(`// --------------------- ${comment} --------------------- `);
+        this.lines.push(
+            `${comment.toUpperCase().includes("START ")?'\n':''}// --------------------- ${comment.toUpperCase()} ---------------------${comment.toUpperCase().includes("END ")? '\n' : ''}`);
     }
 
     public appendLabel(label: string, comment: string = "") {
         this.appendLine(`${label}:`, comment); // label:
     }
 
-    public appendValueToPointer(value: string, comment: string = "") {
+    public appendValueToPointer(
+        value: string | number,
+        comment: string = "") {
         this.appendLine(`${this.pointer} = ${value};`, comment); //pointer = value;
     }
 
@@ -74,13 +78,13 @@ export class Code {
     }
 
     public appendStackPointerPlusValue(
-        value: string,
+        value: string  | number,
         comment: string = "") {
         this.appendLine(`${this.pointer} = P + ${value};`, comment); // pointer = P + value;
     }
 
     public appendHeapPointerPlusValue(
-        value: string,
+        value: string  | number,
         comment: string = ""
     ) {
         this.appendLine(`${this.pointer} = H + ${value}`, comment); // pointer = H + value;
@@ -149,43 +153,43 @@ export class Code {
 
     public appendAsignToStackPosition(
         position: string,
-        value: string,
+        value: string  | number,
         comment: string = ""
     ) {
-        this.appendLine(`STACK[${position}] = ${value};`, comment); // STACK [position] = value;
+        this.appendLine(`STACK[(int)${position}] = ${value};`, comment); // STACK [position] = value;
     }
 
     public appendAsignToHeapPosition(
         position: string,
-        value: string,
+        value: string | number,
         comment: string = ""
     ) {
-        this.appendLine(`HEAP[${position}] = ${value};`, comment); // HEAP [position] = value;
+        this.appendLine(`HEAP[(int)${position}] = ${value};`, comment); // HEAP [position] = value;
     }
 
     public appendAddToStackPointer(
-        value: string,
+        value: string | number,
         comment: string = ""
     ) {
         this.appendLine(`P = P + ${value};`, comment);
     }
 
     public appendAddToHeapPointer(
-        value: string,
+        value: string | number,
         comment: string = ""
     ) {
         this.appendLine(`H = H + ${value};`, comment);
     }
 
     public appendSubToStackPointer(
-        value: string,
+        value: string | number,
         comment: string = ""
     ) {
         this.appendLine(`P = P - ${value};`, comment);
     }
 
     public appendSubToHeapPointer(
-        value: string,
+        value: string | number,
         comment: string = ""
     ) {
         this.appendLine(`H = H - ${value};`, comment);
@@ -195,14 +199,14 @@ export class Code {
         position: string,
         comment: string = ""
     ) {
-        this.appendLine(`${this.pointer} = STACK[${position}];`, comment); // pointer = STACK [position];
+        this.appendLine(`${this.pointer} = STACK[(int)${position}];`, comment); // pointer = STACK [position];
     }
 
     public GetFromHeap(
         position: string,
         comment: string = ""
     ) {
-        this.appendLine(`${this.pointer} = HEAP[${position}];`, comment); // pointer = STACK [position];
+        this.appendLine(`${this.pointer} = HEAP[(int)${position}];`, comment); // pointer = HEAP [position];
     }
 
     public appendMethodStart(
@@ -232,27 +236,29 @@ export class Code {
         char: any,
         comment: string = ""
     ) {
-        this.appendLine(`print(%c, ${char});`, comment);
+        this.appendLine(`printf("%c", (int)${char});`, comment);
     }
 
     public appendPrintInt(
         int: any,
         comment: string = ""
     ) {
-        this.appendLine(`print(%e, ${int});`, comment);
+        this.appendLine(`printf("%e", ${int});`, comment);
     }
 
     public appendPrintDouble(
         double: any,
         comment: string = ""
     ) {
-        this.appendLine(`print(%d, ${double});`, comment);
+        this.appendLine(`printf("%d", ${double});`, comment);
     }
 
     public ValueToStringCode(): Code {
         const toStringCode = new Code(this);
+        toStringCode.appendSplitComment("START IMPRIMIENDO VALOR");
         let type = this.value.typo;
         type = type.toUpperCase();
+        console.log(type);
         switch (type) {
             case "NUMBER":
                 toStringCode.appendPrintInt(this.getPointer());
@@ -283,6 +289,7 @@ export class Code {
                 toStringCode.append(controlCode);
                 break;
         }
+        toStringCode.appendSplitComment("END IMPRIMIENDO VALOR");
         return toStringCode;
     }
 
@@ -307,7 +314,7 @@ export class Code {
     public setValue = (value: Cntnr) => this.value = value;
 
     public getPointer = () => this.pointer;
-    public setPointer = (pointer: string) => this.pointer = pointer;
+    public setPointer = (pointer: string | number) => this.pointer = pointer+"";
 
     public getText = () => this.lines.join('\n').trim();
     public getASMText = () => this.asmLines.join('\n').trim();

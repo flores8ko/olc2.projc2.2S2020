@@ -15,7 +15,7 @@ export class Reference extends Cntnr {
         this.isConst = isConst;
     }
 
-    public getReferenceValue = () : string => {
+    public getReferenceType = () : string => {
         return this.tipoNombre.toUpperCase();
     };
 

@@ -4,8 +4,12 @@ import {Reference} from "../utils/Reference";
 import {BOOLEAN} from "../utils/PrimitiveTypoContainer";
 import {SemanticException} from "../utils/Utils";
 import {GraphvizNode} from "../utils/GraphvizNode";
+import { Code } from "../utils/C3D/Code";
 
-export class SentenceTernaryNode extends Op{
+export class SentenceTernaryNode extends Op {
+    public GOCode(env: Envmnt): Code {
+        throw new Error("Method not implemented.");
+    }
     private readonly condicion: Op;
     private readonly trueSentence: Op;
     private readonly falseSentence: Op;

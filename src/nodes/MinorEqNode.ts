@@ -4,8 +4,12 @@ import {MenorEq} from "../utils/RelationalOperationsFunctions";
 import {Cntnr} from "../utils/Cntnr";
 import {GraphvizNode} from "../utils/GraphvizNode";
 import {Position} from "../utils/ErrorsControl";
+import { Code } from "../utils/C3D/Code";
 
 export class MinorEqNode extends Op {
+    public GOCode(env: Envmnt): Code {
+        throw new Error("Method not implemented.");
+    }
     private readonly lf: Op;
     private readonly rt: Op;
 

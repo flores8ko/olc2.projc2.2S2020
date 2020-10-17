@@ -3,8 +3,12 @@ import {Envmnt} from "../utils/Envmnt";
 import {LogicDoWhile} from "../utils/Utils";
 import {GraphvizNode} from "../utils/GraphvizNode";
 import {TSGraphControl} from "../utils/TSGraphControl";
+import { Code } from "../utils/C3D/Code";
 
 export class DoWhileNode extends Op {
+    public GOCode(env: Envmnt): Code {
+        throw new Error("Method not implemented.");
+    }
     private readonly condition: Op;
     private readonly sentences: Array<Op>;
 

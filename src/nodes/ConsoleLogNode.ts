@@ -3,13 +3,27 @@ import {Envmnt} from "../utils/Envmnt";
 import {Reference} from "../utils/Reference";
 import {Console} from "../utils/Console";
 import {GraphvizNode} from "../utils/GraphvizNode";
+import { Code } from "../utils/C3D/Code";
+import {GetReferenceValueCode} from "../utils/Utils";
 
-export class ConsoleLogNode extends Op{
+export class ConsoleLogNode extends Op {
     private expression: Array<Op>;
 
     constructor(position: any, expression: Array<Op>) {
         super(position);
         this.expression = expression;
+    }
+
+    public GOCode(env: Envmnt): Code {
+        const codeAns = new Code();
+        for(let expr of this.expression){
+            let codeExpr = expr.ExeCode(env);
+            codeExpr = GetReferenceValueCode(codeExpr);
+            //System.out.println(codeExpr.getValue().typo);
+            codeAns.append(codeExpr.ValueToStringCode());
+        }
+        codeAns.appendPrintChar("'\\n'");
+        return codeAns;
     }
 
     GO(env: Envmnt) : object {

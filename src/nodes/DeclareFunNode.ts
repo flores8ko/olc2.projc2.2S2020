@@ -4,8 +4,12 @@ import {UserDefined} from "../utils/functions/UserDefined";
 import {Reference} from "../utils/Reference";
 import {GraphvizNode} from "../utils/GraphvizNode";
 import {TSGraphControl} from "../utils/TSGraphControl";
+import { Code } from "../utils/C3D/Code";
 
-export class DeclareFunNode extends Op{
+export class DeclareFunNode extends Op {
+    public GOCode(env: Envmnt): Code {
+        throw new Error("Method not implemented.");
+    }
     private readonly name: string;
     private readonly params: Array<Op>;
     private readonly sentences: Array<Op>;

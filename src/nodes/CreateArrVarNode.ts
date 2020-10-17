@@ -5,8 +5,12 @@ import {Reference} from "../utils/Reference";
 import {SemanticException} from "../utils/Utils";
 import {ARRAY, NUMBER, STRING, UNDEFINED} from "../utils/PrimitiveTypoContainer";
 import {GraphvizNode} from "../utils/GraphvizNode";
+import { Code } from "../utils/C3D/Code";
 
 export class CreateArrVarNode extends Op {
+    public GOCode(env: Envmnt): Code {
+        throw new Error("Method not implemented.");
+    }
     private readonly id: Op;
     private readonly index: Op;
 

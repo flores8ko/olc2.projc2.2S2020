@@ -4,8 +4,12 @@ import {Cntnr} from "../utils/Cntnr";
 import {Reference} from "../utils/Reference";
 import {OBJECT} from "../utils/PrimitiveTypoContainer";
 import {GraphvizNode} from "../utils/GraphvizNode";
+import { Code } from "../utils/C3D/Code";
 
 export class CreateObjNode extends Op {
+    public GOCode(env: Envmnt): Code {
+        throw new Error("Method not implemented.");
+    }
     private readonly attrs: Map<string, Op>;
 
     constructor(position: any, attrs: Map<string, Op>) {

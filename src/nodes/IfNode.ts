@@ -5,8 +5,12 @@ import {Reference} from "../utils/Reference";
 import {PassPropsAndFuncs, SemanticException} from "../utils/Utils";
 import {GraphvizNode} from "../utils/GraphvizNode";
 import {TSGraphControl} from "../utils/TSGraphControl";
+import { Code } from "../utils/C3D/Code";
 
-export class IfNode extends Op{
+export class IfNode extends Op {
+    public GOCode(env: Envmnt): Code {
+        throw new Error("Method not implemented.");
+    }
     private readonly condition: Op;
     private readonly operationsTrue: Array<Op>;
     private readonly operationsFalse: Array<Op>;

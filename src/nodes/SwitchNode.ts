@@ -10,8 +10,12 @@ import {ContinueObj} from "./ContinueObj";
 import {CaseNode} from "./CaseNode";
 import {SemanticException} from "../utils/Utils";
 import {GraphvizNode} from "../utils/GraphvizNode";
+import { Code } from "../utils/C3D/Code";
 
 export class SwitchNode extends Op {
+    public GOCode(env: Envmnt): Code {
+        throw new Error("Method not implemented.");
+    }
     private readonly condition: Op;
     private readonly cases: Array<CaseNode>;
 

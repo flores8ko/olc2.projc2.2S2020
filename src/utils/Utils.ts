@@ -8,6 +8,8 @@ import {ReturnObj} from "../nodes/ReturnObj";
 import {ContinueObj} from "../nodes/ContinueObj";
 import {TSGraphControl} from "./TSGraphControl";
 import {ErrorsControl, Position} from "./ErrorsControl";
+import {Code} from "./C3D/Code";
+import {Tmp} from "./C3D/Tmp";
 
 export class SemanticException extends Error {
     constructor(message?: string, position: Position = new Position()) {
@@ -99,6 +101,22 @@ export function PassPropsAndFuncs(father: Envmnt, son: Envmnt) {
     // father.props.forEach((v, k) => {
     //     son.Declare(k, v);
     // });
+}
+
+export function GetReferenceValueCode(code: Code): Code {
+    if(!(code.getValue() instanceof Reference))
+        return code;
+    const codeAns = new Code(code);
+    codeAns.setValue((code.getValue() as Reference).getValue());
+    codeAns.setPointer(Tmp.newTmp());
+    if(!code.isHeap) {
+        codeAns.GetFromStack(code.getPointer());
+    }else {
+        codeAns.GetFromHeap(code.getPointer());
+        codeAns.isHeap = code.isHeap;
+    }
+    //TODO tmpmanager ??
+    return codeAns;
 }
 
 export function LogicWhile(env: Envmnt, condition: Op, sentences: Array<Op>, extra: Op) {

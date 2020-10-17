@@ -4,8 +4,12 @@ import {Cntnr} from "../utils/Cntnr";
 import {Reference} from "../utils/Reference";
 import {ARRAY} from "../utils/PrimitiveTypoContainer";
 import {GraphvizNode} from "../utils/GraphvizNode";
+import { Code } from "../utils/C3D/Code";
 
-export class CreateArrayNode extends Op{
+export class CreateArrayNode extends Op {
+    public GOCode(env: Envmnt): Code {
+        throw new Error("Method not implemented.");
+    }
     private readonly vals: Array<Op>;
 
     constructor(position: any, vals: Array<Op>) {

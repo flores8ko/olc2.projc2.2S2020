@@ -8,6 +8,7 @@ import {UserDefined} from "./functions/UserDefined";
 export abstract class Cntnr {
     private readonly owner: Cntnr;
     public readonly props = new Map<string, Cntnr>();
+    public readonly propsOrder: Array<string> = new Array<string>();
     public typo: string;
 
     protected constructor(owner?: Cntnr) {
@@ -24,12 +25,15 @@ export abstract class Cntnr {
     }
 
     public AddProperty(id: string, cntnr: Cntnr): void {
-        //id = id.toUpperCase();
+        id = id.toUpperCase();
         this.props.set(id, cntnr);
+        this.propsOrder.push(id);
     }
 
     public GetProperty(id: string): Cntnr {
-       // id = id.toUpperCase();
+        id = id.toUpperCase();
+        console.log(id);
+        console.log(this);
         const val = this.props.get(id);
         if (val !== null && val !== undefined) {
             return val;
@@ -38,6 +42,12 @@ export abstract class Cntnr {
         //this.props.set(id, new Reference());
         //return this.props.get(id);
         return undefined;
+    }
+
+    public GetPropertyIndex(id: string): number{
+        id = id.toUpperCase();
+        const val = this.propsOrder.indexOf(id);
+        return val !== -1 ? val : this.owner.GetPropertyIndex(id);
     }
 
     public GetTSGraph(owner: string = ''): string {
@@ -64,8 +74,9 @@ export abstract class Cntnr {
     }
 
     public Declare(id: string, cntnr: Cntnr): void {
-        //id = id.toUpperCase();
+        id = id.toUpperCase();
         this.props.set(id, cntnr);
+        this.propsOrder.push(id);
     }
 
     public GetTypo(): string {

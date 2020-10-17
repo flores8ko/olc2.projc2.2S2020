@@ -62,9 +62,10 @@ import {ReturnNode} from "./nodes/ReturnNode";
 import {FunctionCallNode} from "./nodes/FunctionCallNode";
 import {TSGraphControl} from "./utils/TSGraphControl";
 import {NodesControl} from "./utils/NodesControl";
-import { ErrorsControl } from "./utils/ErrorsControl";
+import {ErrorsControl} from "./utils/ErrorsControl";
 import {Lbl} from "./utils/C3D/Lbl";
 import {Tmp} from "./utils/C3D/Tmp";
+import {Code} from "./utils/C3D/Code";
 
 export {
     Console,
@@ -163,7 +164,7 @@ export function ExecuteAST(sentences: Array<Op>) {
     const graphString = TSGraphControl.GetGetGraphsString();
     if (graphString !== '') {
         const win = window.open('./graph.html#' + TSGraphControl.GetGetGraphsString(), '_blank');
-        if(win !== null)
+        if (win !== null)
             win.focus();
     }
 }
@@ -173,10 +174,25 @@ export function GetC3DCode(sentences: Array<Op>): string {
     Tmp.resetCount();
     const tmps = Tmp.getCount();
     let CCode = "";
-    CCode += "#include <stdio.h> //Importar para el uso de Printf";
 
+    const env = new Envmnt(null, sentences);
+    const code = env.GO_ALL_CODE();
 
-        return CCode;
+    CCode += "#include <stdio.h> //Importar para el uso de Printf\n" +
+        "float HEAP[16384]; //Estructura para heap \n" +
+        "float STACK[16394]; //Estructura para stack \n" +
+        "float P; //Puntero P \n" +
+        "float H; //Puntero H \n" +
+        "float ";
+    for (let i = 0; i <= Tmp.getCount(); i++) {
+        CCode += `t${i}`;
+        CCode += i == Tmp.getCount() ? ";\n\n" : ",";
+    }
+    CCode += "void main(){\n";
+    CCode += code.getText();
+    CCode += "\nreturn;\n" +
+        "}";
+    return CCode;
 }
 
 export function GraphAST(sentences: Array<Op>): string {

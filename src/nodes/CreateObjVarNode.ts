@@ -6,8 +6,12 @@ import {SemanticException} from "../utils/Utils";
 import {FunctionRepresent} from "../utils/functions/FunctionRepresent";
 import {ReturnObj} from "./ReturnObj";
 import {GraphvizNode} from "../utils/GraphvizNode";
+import { Code } from "../utils/C3D/Code";
 
-export class CreateObjVarNode extends Op{
+export class CreateObjVarNode extends Op {
+    public GOCode(env: Envmnt): Code {
+        throw new Error("Method not implemented.");
+    }
     private readonly id: Op;
     private readonly attr: string;
 

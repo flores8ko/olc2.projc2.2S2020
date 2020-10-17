@@ -3,8 +3,12 @@ import {Envmnt} from "../utils/Envmnt";
 import {Modulo} from "../utils/AlgebraicOperationsFunctions";
 import {Cntnr} from "../utils/Cntnr";
 import {GraphvizNode} from "../utils/GraphvizNode";
+import { Code } from "../utils/C3D/Code";
 
-export class ModNode extends Op{
+export class ModNode extends Op {
+    public GOCode(env: Envmnt): Code {
+        throw new Error("Method not implemented.");
+    }
     private readonly lf: Op;
     private readonly rt: Op;
 

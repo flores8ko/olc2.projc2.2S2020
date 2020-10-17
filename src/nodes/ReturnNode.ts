@@ -4,8 +4,12 @@ import {ReturnObj} from "./ReturnObj";
 import {Cntnr} from "../utils/Cntnr";
 import {UNDEFINED} from "../utils/PrimitiveTypoContainer";
 import {GraphvizNode} from "../utils/GraphvizNode";
+import { Code } from "../utils/C3D/Code";
 
-export class ReturnNode extends Op{
+export class ReturnNode extends Op {
+    public GOCode(env: Envmnt): Code {
+        throw new Error("Method not implemented.");
+    }
     private readonly value: Op;
 
     constructor(position: any, value: Op) {

@@ -2,8 +2,12 @@ import {Cntnr, Envmnt, Op, Reference} from "../index";
 import {SemanticException} from "../utils/Utils";
 import {Suma} from "../utils/AlgebraicOperationsFunctions";
 import {GraphvizNode} from "../utils/GraphvizNode";
+import { Code } from "../utils/C3D/Code";
 
 export class ReAsignAddNode extends Op {
+    public GOCode(env: Envmnt): Code {
+        throw new Error("Method not implemented.");
+    }
     private readonly lf: Op;
     private readonly rt: Op;
 

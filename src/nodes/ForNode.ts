@@ -3,8 +3,12 @@ import {Envmnt} from "../utils/Envmnt";
 import {LogicWhile} from "../utils/Utils";
 import {GraphvizNode} from "../utils/GraphvizNode";
 import {TSGraphControl} from "../utils/TSGraphControl";
+import { Code } from "../utils/C3D/Code";
 
 export class ForNode extends Op {
+    public GOCode(env: Envmnt): Code {
+        throw new Error("Method not implemented.");
+    }
     private readonly condition0: Op;
     private readonly condition1: Op;
     private readonly condition2: Op;

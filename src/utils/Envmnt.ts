@@ -7,14 +7,21 @@ import {DeclareFunNode} from "../nodes/DeclareFunNode";
 import {DeclareTypeStructureNode} from "../nodes/DeclareTypeStructureNode";
 import {GraphvizNode} from "./GraphvizNode";
 import {Graficar_ts} from "./nativeFunctions/graficar_ts";
+import {Code} from "./C3D/Code";
 
 export class Envmnt extends Cntnr {
     public readonly Extra = new Map<string, any>();
     private readonly operations: Array<Op>;
+    public StartLabel: string;
+    public EndLabel: string;
+    public ExitLabel: string;
 
-    constructor(owner: Cntnr, operations: Array<Op>) {
+    constructor(owner: Cntnr, operations: Array<Op>, startLabel: string = "", endLabel: string = "", exitLabel = "") {
         super(owner);
         this.operations = operations;
+        this.StartLabel = startLabel;
+        this.EndLabel = endLabel;
+        this.ExitLabel = exitLabel;
         this.typo = "Ambito";
         this.Declare("graficar_ts", new Graficar_ts());
     }
@@ -51,5 +58,18 @@ export class Envmnt extends Cntnr {
 
     public GetSentences(): Array<Op> {
         return this.operations;
+    }
+
+    public GO_ALL_CODE(env: Envmnt = null): Code{
+        const code = new Code();
+        for (let op of this.operations) {
+            try{
+                const result = op.ExeCode(env ? env : this);
+                code.append(result);
+            }catch (e) {
+                console.log(e.message);
+            }
+        }
+        return code;
     }
 }

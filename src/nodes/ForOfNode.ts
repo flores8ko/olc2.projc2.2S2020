@@ -5,8 +5,12 @@ import {ARRAY} from "../utils/PrimitiveTypoContainer";
 import {FindVar, SemanticException} from "../utils/Utils";
 import {GraphvizNode} from "../utils/GraphvizNode";
 import {TSGraphControl} from "../utils/TSGraphControl";
+import { Code } from "../utils/C3D/Code";
 
 export class ForOfNode extends Op {
+    public GOCode(env: Envmnt): Code {
+        throw new Error("Method not implemented.");
+    }
     private readonly controlVar: string;
     private readonly newControlVar: boolean;
     private readonly array: Op;

@@ -103,9 +103,18 @@ export class ARRAY extends Cntnr {
     private readonly value: Array<Cntnr>;
     private readonly contentType: string;
 
-    constructor(value?: Array<Cntnr>, contentType: string = 'ANY') {
+    constructor(value?: Array<Cntnr> | string, contentType: string = 'ANY') {
         super();
-        this.value = value || new Array<Cntnr>();
+        if (value instanceof String) {
+            this.value = new Array<Cntnr>();
+            for (let i = 0; i < value.length; i++) {
+                let ref = new Reference();
+                this.value.push(ref);
+            }
+
+        }else{
+            this.value = value as Array<Cntnr> || new Array<Cntnr>();
+        }
         this.typo = `ARRAY`;
         this.contentType = contentType;
         try{

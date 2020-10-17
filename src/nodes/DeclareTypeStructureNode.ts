@@ -2,8 +2,12 @@ import {Op} from "../utils/Op";
 import {Envmnt} from "../utils/Envmnt";
 import {MyMap, ObjectsStructures, ObjectStructure} from "../utils/Utils";
 import {GraphvizNode} from "../utils/GraphvizNode";
+import { Code } from "../utils/C3D/Code";
 
-export class DeclareTypeStructureNode extends Op{
+export class DeclareTypeStructureNode extends Op {
+    public GOCode(env: Envmnt): Code {
+        throw new Error("Method not implemented.");
+    }
     private readonly name: string;
     private readonly properties: Map<string, string>;
 

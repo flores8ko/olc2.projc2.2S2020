@@ -5,8 +5,12 @@ import {SemanticException} from "../utils/Utils";
 import {Resta} from "../utils/AlgebraicOperationsFunctions";
 import {Cntnr} from "../utils/Cntnr";
 import {GraphvizNode} from "../utils/GraphvizNode";
+import { Code } from "../utils/C3D/Code";
 
 export class ReAsignSubNode extends Op {
+    public GOCode(env: Envmnt): Code {
+        throw new Error("Method not implemented.");
+    }
     private readonly lf: Op;
     private readonly rt: Op;
 

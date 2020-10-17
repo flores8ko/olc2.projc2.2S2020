@@ -4,6 +4,7 @@ import {DeclareVarNode} from "./DeclareVarNode";
 import {Cntnr} from "../utils/Cntnr";
 import {UNDEFINED} from "../utils/PrimitiveTypoContainer";
 import {GraphvizNode} from "../utils/GraphvizNode";
+import { Code } from "../utils/C3D/Code";
 
 export class DeclareVarListNode extends Op {
     private readonly tipoNombre: string;
@@ -17,6 +18,24 @@ export class DeclareVarListNode extends Op {
         this.declarationOps = declarationOps;
         this.value = value || null;
         this.isConst = isConst;
+    }
+
+    public GOCode(env: Envmnt): Code {
+        const codeAns = new Code();
+        for (let op of this.declarationOps) {
+            try {
+                if (this.value !== null) {
+                    (op as DeclareVarNode).AddValue(this.value.Exe(env) as Cntnr, this.isConst, this.tipoNombre);
+                }else{
+                    (op as DeclareVarNode).AddValue(new UNDEFINED(), this.isConst, this.tipoNombre);
+                }
+                const res = op.ExeCode(env);
+                codeAns.append(res);
+            } catch (e) {
+                console.log(e.message);
+            }
+        }
+        return codeAns;
     }
 
     GO(env: Envmnt): object {

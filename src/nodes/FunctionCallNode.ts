@@ -8,8 +8,12 @@ import {UNDEFINED} from "../utils/PrimitiveTypoContainer";
 import {IsPrimitiveTypo, SemanticException} from "../utils/Utils";
 import {UserDefined} from "../utils/functions/UserDefined";
 import {GraphvizNode} from "../utils/GraphvizNode";
+import { Code } from "../utils/C3D/Code";
 
-export class FunctionCallNode extends Op{
+export class FunctionCallNode extends Op {
+    public GOCode(env: Envmnt): Code {
+        throw new Error("Method not implemented.");
+    }
     private readonly name: Op;
     private readonly args: Array<Op>;
 

@@ -4,8 +4,12 @@ import {UNDEFINED} from "../utils/PrimitiveTypoContainer";
 import {Reference} from "../utils/Reference";
 import {GraphvizNode} from "../utils/GraphvizNode";
 import {TSGraphControl} from "../utils/TSGraphControl";
+import { Code } from "../utils/C3D/Code";
 
-export class DeclareFunParamNode extends Op{
+export class DeclareFunParamNode extends Op {
+    public GOCode(env: Envmnt): Code {
+        throw new Error("Method not implemented.");
+    }
     private readonly name: string;
     private readonly type: string;
 

@@ -2,6 +2,7 @@ import {Envmnt} from "./Envmnt";
 import {ErrorCompo} from "./Utils";
 import {GraphvizNode} from "./GraphvizNode";
 import {Position} from "./ErrorsControl";
+import {Code} from "./C3D/Code";
 
 export abstract class Op {
     public Exe(env: Envmnt): object{
@@ -11,6 +12,15 @@ export abstract class Op {
             throw new ErrorCompo(e.message);
         }
     }
+
+    public ExeCode(env: Envmnt): Code {
+        try{
+            return this.GOCode(env);
+        }catch (e) {
+            throw new ErrorCompo(e.message);
+        }
+    }
+
     public readonly position: Position;
 
     constructor(position: Position = new Position()) {
@@ -18,6 +28,8 @@ export abstract class Op {
     }
 
     public abstract GO(env: Envmnt): object;
+
+    public abstract GOCode(env: Envmnt): Code;
 
     public abstract GetGraph(env: Envmnt): GraphvizNode;
 
