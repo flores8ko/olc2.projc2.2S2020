@@ -133,12 +133,11 @@
         editor.setFontSize(16);
 
         editor.setValue('' +
-            'let a = "hola mundo" + " aver ";\n' +
-            'a = true && true && true && (true && false);\n' +
-            'let b = true || false && true || false;\n' +
-            'a = a && b;\n' +
-            '\n' +
-            'console.log(a, " puto");');
+            'let a = "hola";\n' +
+            'let b = "hola";\n' +
+            'console.log(a == b || true);\n' +
+            'b = a;\n' +
+            'console.log(a == b || true);');
 
 
         const scrollFactor = 500;
