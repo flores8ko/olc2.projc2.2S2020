@@ -7,6 +7,7 @@ import {GraphvizNode} from "../utils/GraphvizNode";
 import {TSGraphControl} from "../utils/TSGraphControl";
 import { Code } from "../utils/C3D/Code";
 import {Tmp} from "../utils/C3D/Tmp";
+import {GetReferenceValueCode} from "../utils/Utils";
 
 export class DeclareVarNode extends Op {
     private readonly name: string;
@@ -42,6 +43,7 @@ export class DeclareVarNode extends Op {
             codeStack.appendStackPointerPlusValue(env.GetPropertyIndex(this.name));
 
             codeAns.append(codeStack);
+            this.valueCode = GetReferenceValueCode(this.valueCode);
             codeAns.append(this.valueCode);
             codeAns.appendAsignToStackPosition(codeStack.getPointer(), this.valueCode.getPointer());
             codeAns.setValue(this.value);
@@ -53,7 +55,7 @@ export class DeclareVarNode extends Op {
             codeHeap.setPointer(Tmp.newTmp());
             codeHeap.appendValueToPointer("H");
             //TODO array memory size calculate and use
-            codeHeap.appendAddToHeapPointer("100");
+            codeHeap.appendAddToHeapPointer(this.value.GetLinearMemorySize());
             codeAns.append(codeHeap);
 
             const codeStack = new Code();
