@@ -133,11 +133,13 @@
         editor.setFontSize(16);
 
         editor.setValue('' +
-            'let a = "hola";\n' +
-            'let b = "hola";\n' +
-            'console.log(a == b || true);\n' +
+            'let a = 5;\n' +
+            'let b = 56;\n' +
+            'console.log(a >= b );\n' +
             'b = a;\n' +
-            'console.log(a == b || true);');
+            'console.log(a >= a );\n' +
+            'console.log(a);\n' +
+            'console.log(b);');
 
 
         const scrollFactor = 500;
