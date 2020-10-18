@@ -243,7 +243,7 @@ export class Code {
         int: any,
         comment: string = ""
     ) {
-        this.appendLine(`printf("%e", ${int});`, comment);
+        this.appendLine(`printf("%g", (float)${int});`, comment);
     }
 
     public appendPrintDouble(
@@ -264,6 +264,7 @@ export class Code {
                 toStringCode.appendPrintInt(this.getPointer());
                 break;
             case "BOOLEAN":
+                toStringCode.appendPrintInt(this.getPointer());
                 break;
             case "STRING":
                 const CodeTmp = new Code();

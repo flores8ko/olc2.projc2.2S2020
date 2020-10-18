@@ -3,6 +3,8 @@ import {Reference} from "./Reference";
 import {Length} from "./nativeFunctions/length";
 import {Push} from "./nativeFunctions/push";
 import {Pop} from "./nativeFunctions/pop";
+import {ArrayRange} from "./C3D/ArrayRange";
+import {Code} from "./C3D/Code";
 
 export class BOOLEAN extends Cntnr {
     private readonly value: boolean;
@@ -102,21 +104,26 @@ export class NULL extends Cntnr {
 export class ARRAY extends Cntnr {
     private readonly value: Array<Cntnr>;
     private readonly contentType: string;
+    private ranges: Array<ArrayRange>;
 
-    constructor(value?: Array<Cntnr> | string, contentType: string = 'ANY') {
+    constructor(value?: Array<Cntnr> | string, contentType: string = 'ANY', ranges: Array<ArrayRange> = new Array<ArrayRange>()) {
         super();
+        this.typo = `ARRAY`;
+        this.contentType = contentType;
+        this.ranges = ranges;
+
         if (value instanceof String) {
             this.value = new Array<Cntnr>();
+            this.ranges.push(new ArrayRange(0, value.length - 1));
             for (let i = 0; i < value.length; i++) {
-                let ref = new Reference();
+                let ref = new Reference("NUMBER");
+                ref.PutValueOnReference(new NUMBER(value.charCodeAt(i)));
                 this.value.push(ref);
             }
-
         }else{
             this.value = value as Array<Cntnr> || new Array<Cntnr>();
         }
-        this.typo = `ARRAY`;
-        this.contentType = contentType;
+
         try{
             this.Declare("length", new Length(this));
             this.Declare("push", new Push(this));
@@ -138,6 +145,18 @@ export class ARRAY extends Cntnr {
         log += ']';
         return log;
     };
+
+    public GetLinearMemorySize(): number {
+        return 0;
+    }
+
+    public GetPosition(indexes: Array<number>): number {
+        return 0;
+    }
+
+    public GetPositionCode(codes: Array<Code>): Code {
+        return null;
+    }
 
     public getValue = (index: number): object => {
         let val = this.value[index];
