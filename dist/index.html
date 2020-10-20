@@ -134,11 +134,20 @@
 
         editor.setValue('' +
             'let a = 5;\n' +
-            'a += 10;\n' +
-            'console.log(a);\n' +
-            'a = "hola ";\n' +
-            'a += "mundo";\n' +
-            'console.log(a);');
+            'let b = "adios";\n' +
+            'while(a < 10){\n' +
+            '    let b = "hola";\n' +
+            '    let c = "veamos ggg";\n' +
+            '    while(true){\n' +
+            '        let c = 3243;\n' +
+            '        console.log("UUUYY QUIETO", c);\n' +
+            '        break;\n' +
+            '    }\n' +
+            '    let d = 38843430;\n' +
+            '    console.log(c, b, a);\n' +
+            '    a++;\n' +
+            '}\n' +
+            'console.log(b);');
 
 
         const scrollFactor = 500;

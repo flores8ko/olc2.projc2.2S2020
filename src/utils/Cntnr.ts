@@ -1,9 +1,5 @@
 import {Reference} from "./Reference";
-import {UNDEFINED} from "./PrimitiveTypoContainer";
 import {TSGraphControl} from "./TSGraphControl";
-import {FunctionRepresent} from "./functions/FunctionRepresent";
-import {Native} from "./functions/Native";
-import {UserDefined} from "./functions/UserDefined";
 
 export abstract class Cntnr {
     private readonly owner: Cntnr;
@@ -32,8 +28,6 @@ export abstract class Cntnr {
 
     public GetProperty(id: string): Cntnr {
         id = id.toUpperCase();
-        console.log(id);
-        console.log(this);
         const val = this.props.get(id);
         if (val !== null && val !== undefined) {
             return val;
@@ -44,10 +38,20 @@ export abstract class Cntnr {
         return undefined;
     }
 
+    public FatherPropertiesSize(): number {
+        let propertiesTotal = 0;
+        let ownerCntnr = this.owner;
+        while (ownerCntnr != null) {
+            propertiesTotal += ownerCntnr.props.size - 1;
+            ownerCntnr = ownerCntnr.GetOwner();
+        }
+        return propertiesTotal;
+    }
+
     public GetPropertyIndex(id: string): number{
         id = id.toUpperCase();
         const val = this.propsOrder.indexOf(id);
-        return val !== -1 ? val : this.owner.GetPropertyIndex(id);
+        return val !== -1 ? val + this.FatherPropertiesSize() : this.owner.GetPropertyIndex(id);
     }
 
     public GetTSGraph(owner: string = ''): string {

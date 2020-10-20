@@ -21,6 +21,7 @@ export class ConsoleLogNode extends Op {
             codeExpr = GetReferenceValueCode(codeExpr);
             //System.out.println(codeExpr.getValue().typo);
             codeAns.append(codeExpr.ValueToStringCode());
+            codeAns.appendPrintChar(32);
         }
         codeAns.appendPrintChar("'\\n'");
         return codeAns;
