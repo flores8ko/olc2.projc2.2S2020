@@ -1,15 +1,27 @@
 import {Op} from "../utils/Op";
 import {Envmnt} from "../utils/Envmnt";
 import {Reference} from "../utils/Reference";
-import {SemanticException} from "../utils/Utils";
+import {GetReferenceValueCode, SemanticException} from "../utils/Utils";
 import {Modulo} from "../utils/AlgebraicOperationsFunctions";
 import {Cntnr} from "../utils/Cntnr";
 import {GraphvizNode} from "../utils/GraphvizNode";
 import { Code } from "../utils/C3D/Code";
+import {Tmp} from "../utils/C3D/Tmp";
 
 export class ReAsignModNode extends Op {
     public GOCode(env: Envmnt): Code {
-        throw new Error("Method not implemented.");
+        const value = this.GO(env) as Cntnr;
+
+        const codeLfRef = this.lf.ExeCode(env);
+        const codeLf = GetReferenceValueCode(codeLfRef);
+        const codeRt = GetReferenceValueCode(this.rt.ExeCode(env));
+
+        const codeAns = new Code(codeLfRef, codeLf, codeRt);
+        codeAns.setPointer(Tmp.newTmp());
+        codeAns.appendMod(codeLf.getPointer(), codeRt.getPointer());
+        codeAns.setValue(value);
+        codeAns.appendAsignToStackPosition(codeLfRef.getPointer(), codeAns.getPointer());
+        return codeAns;
     }
     private readonly lf: Op;
     private readonly rt: Op;

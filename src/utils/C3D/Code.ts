@@ -74,7 +74,7 @@ export class Code {
         pointer2: string,
         comment: string = ""
     ) {
-        this.appendLine(`${this.pointer} = ${pointer1} % ${pointer2};`, comment); // pointer = pointer1 % pointer2;
+        this.appendLine(`${this.pointer} = (int) ${pointer1} %  (int)${pointer2};`, comment); // pointer = pointer1 % pointer2;
     }
 
     public appendStackPointerPlusValue(
