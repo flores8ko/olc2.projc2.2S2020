@@ -134,12 +134,11 @@
 
         editor.setValue('' +
             'let a = 5;\n' +
-            'let b = 56;\n' +
-            'console.log(a >= b );\n' +
-            'b = a;\n' +
-            'console.log(a >= a );\n' +
             'console.log(a);\n' +
-            'console.log(b);');
+            'a++;\n' +
+            'console.log(a);\n' +
+            'console.log(a++);\n' +
+            'console.log(a);');
 
 
         const scrollFactor = 500;
