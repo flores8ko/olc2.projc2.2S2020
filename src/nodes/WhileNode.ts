@@ -20,7 +20,7 @@ export class WhileNode extends Op {
     public GOCode(env: Envmnt): Code {
         const cond = GetReferenceValueCode(this.condition.ExeCode(env));
         if(!(cond.getValue() instanceof BOOLEAN))
-            throw new SemanticException("condicion utilizada como parametro no soportada por sentencia if");
+            throw new SemanticException("condicion utilizada como parametro no soportada por sentencia while");
 
         const startLbl = Lbl.newLbl(); //while start lbl
         const endLbl = Lbl.newLbl(); // while end lbl
