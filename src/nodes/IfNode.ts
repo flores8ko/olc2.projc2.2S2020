@@ -2,15 +2,13 @@ import {Op} from "../utils/Op";
 import {Envmnt} from "../utils/Envmnt";
 import {BOOLEAN} from "../utils/PrimitiveTypoContainer";
 import {Reference} from "../utils/Reference";
-import {PassPropsAndFuncs, SemanticException} from "../utils/Utils";
+import {GetReferenceValueCode, PassPropsAndFuncs, SemanticException} from "../utils/Utils";
 import {GraphvizNode} from "../utils/GraphvizNode";
 import {TSGraphControl} from "../utils/TSGraphControl";
 import { Code } from "../utils/C3D/Code";
+import {Lbl} from "../utils/C3D/Lbl";
 
 export class IfNode extends Op {
-    public GOCode(env: Envmnt): Code {
-        throw new Error("Method not implemented.");
-    }
     private readonly condition: Op;
     private readonly operationsTrue: Array<Op>;
     private readonly operationsFalse: Array<Op>;
@@ -20,6 +18,39 @@ export class IfNode extends Op {
         this.condition = condition;
         this.operationsTrue = operationsTrue;
         this.operationsFalse = operationsFalse;
+    }
+
+    public GOCode(env: Envmnt): Code {
+        const cond = GetReferenceValueCode(this.condition.ExeCode(env));
+        if(!(cond.getValue() instanceof BOOLEAN))
+            throw new SemanticException("condicion utilizada como parametro no soportada por sentencia if");
+
+        const codeIf = new Code(cond);
+        const lblStart = Lbl.newLbl();
+        const lblEnd = Lbl.newLbl();
+        const lblFalse = Lbl.newLbl();
+        codeIf.appendJE(cond.getPointer(), "0", lblFalse, "IF START"); // if condition value == 0 then jmp to lblFalse
+
+        //true Sentences
+        const evTrue = new Envmnt(env, this.operationsTrue);
+        //Utils.PassPropsAndFuncs(env, evTrue);
+        const codeTrue = evTrue.GO_ALL_CODE();
+        codeIf.appendSplitComment("true statements");
+        codeIf.append(codeTrue);
+        codeIf.appendJMP(lblEnd);
+
+        //false Sentences
+        const evFalse = new Envmnt(env, this.operationsFalse);
+        //Utils.PassPropsAndFuncs(env, evFalse);
+        const codeFalse = evFalse.GO_ALL_CODE();
+        codeIf.appendSplitComment("false statements");
+        codeIf.appendLabel(lblFalse);
+        codeIf.append(codeFalse);
+        codeIf.appendLabel(lblEnd, "IF END");
+
+        //TODO validate return, continue, break
+        //TmpManager.FilterLines(codeIf.getLines());
+        return codeIf;
     }
 
     GO(env: Envmnt): object {
