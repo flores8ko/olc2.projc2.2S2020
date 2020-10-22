@@ -2,14 +2,13 @@ import {Op} from "../utils/Op";
 import {Envmnt} from "../utils/Envmnt";
 import {Reference} from "../utils/Reference";
 import {BOOLEAN} from "../utils/PrimitiveTypoContainer";
-import {SemanticException} from "../utils/Utils";
+import {GetReferenceValueCode, SemanticException} from "../utils/Utils";
 import {GraphvizNode} from "../utils/GraphvizNode";
 import { Code } from "../utils/C3D/Code";
+import { Lbl } from "../utils/C3D/Lbl";
+import {Tmp} from "../utils/C3D/Tmp";
 
 export class SentenceTernaryNode extends Op {
-    public GOCode(env: Envmnt): Code {
-        throw new Error("Method not implemented.");
-    }
     private readonly condicion: Op;
     private readonly trueSentence: Op;
     private readonly falseSentence: Op;
@@ -19,6 +18,38 @@ export class SentenceTernaryNode extends Op {
         this.condicion = condition;
         this.trueSentence = trueSentence;
         this.falseSentence = falseSentence;
+    }
+
+    public GOCode(env: Envmnt): Code {
+        const cond = GetReferenceValueCode(this.condicion.ExeCode(env));
+        if(!(cond.getValue() instanceof BOOLEAN))
+            throw new SemanticException("condicion utilizada como parametro no soportada por sentencia if");
+
+        const codeTernary = new Code(cond);
+        codeTernary.setPointer(Tmp.newTmp());
+        codeTernary.appendSplitComment("Start Ternary");
+        const lblEnd = Lbl.newLbl();
+        const lblFalse = Lbl.newLbl();
+        codeTernary.appendJE(cond.getPointer(), "0", lblFalse);
+
+        codeTernary.appendSplitComment("Start True Sentence");
+        const codeTrue = this.trueSentence.ExeCode(env);
+        codeTernary.append(codeTrue);
+        codeTernary.appendValueToPointer(codeTrue.getPointer());
+        codeTernary.appendJMP(lblEnd);
+        codeTernary.appendSplitComment("End True Sentence");
+
+        codeTernary.appendLabel(lblFalse);
+        codeTernary.appendSplitComment("Start False Sentence");
+        const codeFalse = this.falseSentence.ExeCode(env);
+        codeTernary.append(codeFalse);
+        codeTernary.appendValueToPointer(codeFalse.getPointer());
+        codeTernary.appendSplitComment("End False Sentence");
+
+        codeTernary.appendLabel(lblEnd);
+        codeTernary.appendSplitComment("End Ternary");
+
+        return codeTernary;
     }
 
     GO(env: Envmnt): object {
