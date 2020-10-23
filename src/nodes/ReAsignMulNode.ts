@@ -29,7 +29,11 @@ export class ReAsignMulNode extends Op {
         codeAns.setPointer(Tmp.newTmp());
         codeAns.appendMulti(codeLf.getPointer(), codeRt.getPointer());
         codeAns.setValue(value);
-        codeAns.appendAsignToStackPosition(codeLfRef.getPointer(), codeAns.getPointer());
+        if(!codeLfRef.isHeap) {
+            codeAns.appendAsignToStackPosition(codeLfRef.getPointer(), codeAns.getPointer());
+        }else{
+            codeAns.appendAsignToHeapPosition(codeLfRef.getPointer(), codeAns.getPointer());
+        }
         return codeAns;
     }
 

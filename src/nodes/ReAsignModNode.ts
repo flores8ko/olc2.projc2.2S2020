@@ -20,7 +20,11 @@ export class ReAsignModNode extends Op {
         codeAns.setPointer(Tmp.newTmp());
         codeAns.appendMod(codeLf.getPointer(), codeRt.getPointer());
         codeAns.setValue(value);
-        codeAns.appendAsignToStackPosition(codeLfRef.getPointer(), codeAns.getPointer());
+        if(!codeLfRef.isHeap) {
+            codeAns.appendAsignToStackPosition(codeLfRef.getPointer(), codeAns.getPointer());
+        }else{
+            codeAns.appendAsignToHeapPosition(codeLfRef.getPointer(), codeAns.getPointer());
+        }
         return codeAns;
     }
     private readonly lf: Op;

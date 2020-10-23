@@ -133,10 +133,23 @@
         editor.setFontSize(16);
 
         editor.setValue('' +
-            'let a = 5;\n' +
-            'let b = true;\n' +
-            'let c = b ? 10 + a : 20 + a;\n' +
-            'console.log(c);');
+            'let a = ["hola", "mundo", "adios"];\n' +
+            'let b = 0;\n' +
+            'while(b<3){\n' +
+            '    console.log(a[b]);\n' +
+            '    b++;\n' +
+            '}\n' +
+            'b = 0;\n' +
+            'while(b<3){\n' +
+            '    a[b] += "aver";\n' +
+            '    console.log(a[b]);\n' +
+            '    b++;\n' +
+            '}\n' +
+            'b = 0;\n' +
+            'while(b<3){\n' +
+            '    console.log(a[b]);\n' +
+            '    b++;\n' +
+            '}\n');
 
 
         const scrollFactor = 500;

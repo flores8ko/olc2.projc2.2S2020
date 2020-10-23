@@ -31,7 +31,11 @@ export class ReAddNode extends Op {
         codeSuma.setPointer(Tmp.newTmp());
         codeSuma.appendSuma(codeLfRefVal.getPointer(), "1");
         codeAns.append(codeSuma);
-        codeAns.appendAsignToStackPosition(codeLf.getPointer(), codeSuma.getPointer());
+        if(!codeLf.isHeap) {
+            codeAns.appendAsignToStackPosition(codeLf.getPointer(), codeSuma.getPointer());
+        }else{
+            codeAns.appendAsignToHeapPosition(codeLf.getPointer(), codeSuma.getPointer());
+        }
 
         codeAns.setPointer(Tmp.newTmp());
         codeAns.appendValueToPointer(codeLfRefVal.getPointer());

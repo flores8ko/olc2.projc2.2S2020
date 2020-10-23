@@ -31,7 +31,11 @@ export class ReSubNode extends Op {
         codeResta.setPointer(Tmp.newTmp());
         codeResta.appendResta(codeLfRefVal.getPointer(), "1");
         codeAns.append(codeResta);
-        codeAns.appendAsignToStackPosition(codeLf.getPointer(), codeResta.getPointer());
+        if(!codeLf.isHeap) {
+            codeAns.appendAsignToStackPosition(codeLf.getPointer(), codeResta.getPointer());
+        }else{
+            codeAns.appendAsignToHeapPosition(codeLf.getPointer(), codeResta.getPointer());
+        }
 
         codeAns.setPointer(Tmp.newTmp());
         codeAns.appendValueToPointer(codeLfRefVal.getPointer());
