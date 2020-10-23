@@ -10,6 +10,7 @@ import {TSGraphControl} from "./TSGraphControl";
 import {ErrorsControl, Position} from "./ErrorsControl";
 import {Code} from "./C3D/Code";
 import {Tmp} from "./C3D/Tmp";
+import {ArrayRange} from "./C3D/ArrayRange";
 
 export class SemanticException extends Error {
     constructor(message?: string, position: Position = new Position()) {
@@ -240,4 +241,59 @@ export class ObjectStructure {
 
 export class ObjectsStructures{
     public static objects: Map<string, ObjectStructure> = new Map<string, ObjectStructure>();
+}
+
+export function ArrayMemorySize(ranges: Array<ArrayRange>): number {
+    let ans = 1;
+    for (let range of ranges) {
+        ans *= range.eIndex - range.sIndex + 1;
+    }
+    return ans;
+}
+
+export function ArrayPosition(ranges: Array<ArrayRange>, indexes: Array<number>) {
+    let ans = 0;
+    for(let i = 0; i < ranges.length; i++){
+        const range = ranges[i];
+        let index = indexes[i];
+        index = index - range.sIndex;
+
+        for(let j = i+1; j < ranges.length; j++){
+            const r = ranges[j];
+            index *= (r.eIndex - r.sIndex + 1);
+        }
+
+        ans += index;
+    }
+    return ans;
+}
+
+export function ArrayPositionCode(ranges: Array<ArrayRange>, codes: Array<Code>) {
+    const ans = new Code();
+    ans.setPointer(Tmp.newTmp());
+    ans.appendValueToPointer("0");
+
+
+    for(let i = 0; i < ranges.length; i++){
+        const range = ranges[i];
+        const index = codes[i];
+        //index.appendResta(index.getPointer(), range.sIndex + "", "-sIndex");
+        //index = index - range.sIndex;
+
+        for(var j = i+1; j < ranges.length; j++){
+            const r = ranges[j];
+            //index *= (r.fIndex - r.sIndex + 1);
+            const codeTmp = new Code();
+            codeTmp.setPointer(Tmp.newTmp());
+            codeTmp.appendResta(r.eIndex+"", r.sIndex+"", "fIndex - sIndex");
+            codeTmp.appendSuma(codeTmp.getPointer(), "1", "+1");
+
+            ans.append(codeTmp);
+            index.appendMulti(index.getPointer(),codeTmp.getPointer());
+        }
+        ans.append(index);
+        ans.appendSuma(ans.getPointer(), index.getPointer());
+        //ans += index;
+    }
+    return ans;
 }

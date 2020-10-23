@@ -243,7 +243,7 @@ export class Code {
         int: any,
         comment: string = ""
     ) {
-        this.appendLine(`printf("%f", (float)${int});`, comment);
+        this.appendLine(`printf("%f", (double)${int});`, comment);
     }
 
     public appendPrintDouble(

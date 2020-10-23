@@ -179,11 +179,11 @@ export function GetC3DCode(sentences: Array<Op>): string {
     const code = env.GO_ALL_CODE();
 
     CCode += "#include <stdio.h> //Importar para el uso de Printf\n" +
-        "float HEAP[16384]; //Estructura para heap \n" +
-        "float STACK[16394]; //Estructura para stack \n" +
-        "float P; //Puntero P \n" +
-        "float H; //Puntero H \n" +
-        "float ";
+        "double HEAP[16384]; //Estructura para heap \n" +
+        "double STACK[16394]; //Estructura para stack \n" +
+        "double P; //Puntero P \n" +
+        "double H; //Puntero H \n" +
+        "double ";
     for (let i = 0; i <= Tmp.getCount(); i++) {
         CCode += `t${i}`;
         CCode += i == Tmp.getCount() ? ";\n\n" : ",";

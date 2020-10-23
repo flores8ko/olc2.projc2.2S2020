@@ -5,6 +5,7 @@ import {Push} from "./nativeFunctions/push";
 import {Pop} from "./nativeFunctions/pop";
 import {ArrayRange} from "./C3D/ArrayRange";
 import {Code} from "./C3D/Code";
+import {ArrayMemorySize, ArrayPosition, ArrayPositionCode} from "./Utils";
 
 export class BOOLEAN extends Cntnr {
     private readonly value: boolean;
@@ -106,7 +107,7 @@ export class ARRAY extends Cntnr {
     private readonly contentType: string;
     private ranges: Array<ArrayRange>;
 
-    constructor(value?: Array<Cntnr> | string, contentType: string = 'ANY', ranges: Array<ArrayRange> = new Array<ArrayRange>()) {
+    constructor(value?: Array<Cntnr> | string, contentType: string = 'ANY', ranges: Array<ArrayRange> = null) {
         super();
         this.typo = `ARRAY`;
         this.contentType = contentType;
@@ -122,6 +123,9 @@ export class ARRAY extends Cntnr {
             }
         }else{
             this.value = value as Array<Cntnr> || new Array<Cntnr>();
+            let ranges = new Array<ArrayRange>();
+            ranges.push(new ArrayRange(0, this.value.length-1));
+            this.ranges = this.ranges ? this.ranges : ranges;
         }
 
         try{
@@ -147,15 +151,15 @@ export class ARRAY extends Cntnr {
     };
 
     public GetLinearMemorySize(): number {
-        return 0;
+        return ArrayMemorySize(this.ranges);
     }
 
     public GetPosition(indexes: Array<number>): number {
-        return 0;
+        return ArrayPosition(this.ranges, indexes);
     }
 
     public GetPositionCode(codes: Array<Code>): Code {
-        return null;
+        return ArrayPositionCode(this.ranges, codes);
     }
 
     public getValue = (index: number): object => {

@@ -49,24 +49,6 @@ export class DeclareVarNode extends Op {
             codeAns.setValue(this.value);
             return codeAns;
         }
-        if (this.value instanceof ARRAY) {
-            codeAns.appendSplitComment("Declaración de Arreglo");
-            const codeHeap = new Code();
-            codeHeap.setPointer(Tmp.newTmp());
-            codeHeap.appendValueToPointer("H");
-            //TODO array memory size calculate and use
-            codeHeap.appendAddToHeapPointer(this.value.GetLinearMemorySize());
-            codeAns.append(codeHeap);
-
-            const codeStack = new Code();
-            codeStack.setPointer(Tmp.newTmp());
-            codeStack.appendStackPointerPlusValue(env.GetPropertyIndex(this.name));
-
-            codeAns.append(codeStack);
-            codeAns.appendAsignToStackPosition(codeStack.getPointer(), codeHeap.getPointer());
-            codeAns.setValue(this.value);
-            return codeAns;
-        }
         return codeAns;
     }
 
