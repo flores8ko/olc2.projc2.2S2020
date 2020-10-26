@@ -1,15 +1,11 @@
 import {Op} from "../utils/Op";
 import {Envmnt} from "../utils/Envmnt";
-import {UNDEFINED} from "../utils/PrimitiveTypoContainer";
 import {Reference} from "../utils/Reference";
 import {GraphvizNode} from "../utils/GraphvizNode";
 import {TSGraphControl} from "../utils/TSGraphControl";
-import { Code } from "../utils/C3D/Code";
+import {Code} from "../utils/C3D/Code";
 
 export class DeclareFunParamNode extends Op {
-    public GOCode(env: Envmnt): Code {
-        throw new Error("Method not implemented.");
-    }
     private readonly name: string;
     private readonly type: string;
 
@@ -24,11 +20,21 @@ export class DeclareFunParamNode extends Op {
     }
 
     GO(env: Envmnt): object {
-        const value = new UNDEFINED();
-        const reference = new Reference(this.type);
-        reference.PutValueOnReference(value);
+        const reference = new Reference(this.type, false, true);
         env.Declare(this.name, reference);
         return reference;
+    }
+
+    public GOCode(env: Envmnt): Code {
+        let val = this.GO(env);
+        // const codeStack = new Code();
+        // codeStack.setPointer(Tmp.newTmp());
+        // codeStack.appendStackPointerPlusValue(env.GetPropertyIndex(this.name) + "", this.name);
+        //
+        // codeAns.append(codeStack);
+        // codeAns.appendAsignToStackPosition(codeStack.getPointer(), 0 + "");
+        // codeAns.setValue(val as Cntnr);
+        return new Code();
     }
 
     GetGraph(env: Envmnt): GraphvizNode {

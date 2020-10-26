@@ -7,9 +7,6 @@ import {TSGraphControl} from "../utils/TSGraphControl";
 import { Code } from "../utils/C3D/Code";
 
 export class DeclareFunNode extends Op {
-    public GOCode(env: Envmnt): Code {
-        throw new Error("Method not implemented.");
-    }
     private readonly name: string;
     private readonly params: Array<Op>;
     private readonly sentences: Array<Op>;
@@ -21,6 +18,14 @@ export class DeclareFunNode extends Op {
         this.params = params;
         this.sentences = sentences;
         this.type = type;
+    }
+
+    public GOCode(env: Envmnt): Code {
+        const value = new UserDefined(this.sentences, this.params, this.type);
+        const reference = new Reference();
+        reference.PutValueOnReference(value);
+        env.Declare(this.name, reference, true);
+        return value.GetC3DCode(env, this.name);
     }
 
     GO(env: Envmnt): object {

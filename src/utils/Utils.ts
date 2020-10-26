@@ -1,4 +1,4 @@
-import {BOOLEAN, NULL, OBJECT, UNDEFINED} from "./PrimitiveTypoContainer";
+import {ARRAY, BOOLEAN, NULL, NUMBER, OBJECT, STRING, UNDEFINED} from "./PrimitiveTypoContainer";
 import {Cntnr} from "./Cntnr";
 import {Envmnt} from "./Envmnt";
 import {Op} from "./Op";
@@ -31,6 +31,28 @@ export function DefaultValue(typo: string): Cntnr {
         return new UNDEFINED();
     }
     return GetObjectValue(typo);
+}
+
+export function DefaultValueNoUndefined(typo: string): Cntnr {
+    typo = typo.toUpperCase();
+    switch (typo) {
+        case "STRING":
+            return new STRING();
+        case "NUMBER":
+            return new NUMBER();
+        case "BOOLEAN":
+            return new BOOLEAN();
+        case "ANY":
+            return new ARRAY();
+        case "ARRAY":
+            return new ARRAY();
+        case "NULL":
+            return new NULL();
+        case "UNDEFINED":
+            return new UNDEFINED();
+        default:
+            return GetObjectValue(typo);
+    }
 }
 
 export function IsPrimitiveTypo(typo: string): boolean {

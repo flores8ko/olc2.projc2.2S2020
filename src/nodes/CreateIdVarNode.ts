@@ -24,6 +24,10 @@ export class CreateIdVarNode extends Op {
         return code;
     }
 
+    public GetId() {
+        return this.id;
+    }
+
     GO(env: Envmnt) : object{
         return FindVar(env, this.id);
     }

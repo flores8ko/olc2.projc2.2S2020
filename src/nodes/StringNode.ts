@@ -34,7 +34,6 @@ export class StringNode extends Op {
             codePos.setPointer(Tmp.newTmp());
             codePos.appendSuma(codeAns.getPointer(), i + "", "str["+i+"]");
             chCode = newVal.charCodeAt(i-1);
-            console.log(chCode);
             codePos.appendAsignToHeapPosition(codePos.getPointer(), chCode, "str["+i+"]="+String.fromCharCode(chCode));
             codeAns.append(codePos);
         }

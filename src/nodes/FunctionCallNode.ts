@@ -9,11 +9,10 @@ import {IsPrimitiveTypo, SemanticException} from "../utils/Utils";
 import {UserDefined} from "../utils/functions/UserDefined";
 import {GraphvizNode} from "../utils/GraphvizNode";
 import { Code } from "../utils/C3D/Code";
+import {CreateIdVarNode} from "./CreateIdVarNode";
+import {Tmp} from "../utils/C3D/Tmp";
 
 export class FunctionCallNode extends Op {
-    public GOCode(env: Envmnt): Code {
-        throw new Error("Method not implemented.");
-    }
     private readonly name: Op;
     private readonly args: Array<Op>;
 
@@ -21,6 +20,30 @@ export class FunctionCallNode extends Op {
         super(position);
         this.name = name;
         this.args = args;
+    }
+
+    public GOCode(env: Envmnt): Code {
+        const codeAns = new Code();
+
+        let id = this.name.Exe(env);
+        if (id instanceof Reference) {
+            id = (id as Reference).getValue();
+        }
+        if (id instanceof FunctionRepresent) {
+            let funct = (id as UserDefined);
+            let functName = (this.name as CreateIdVarNode).GetId();
+            let positions = env.GetEnvmtOfset();
+            codeAns.appendSplitComment(`start call ${functName}`);
+            codeAns.setPointer("P");
+            codeAns.appendSuma("P", positions+"");
+            codeAns.appendMethodCall(functName, "llamada a funcion");
+            codeAns.setPointer(Tmp.newTmp());
+            codeAns.appendValueToPointer("P", "valor de retorno");
+            codeAns.appendResta("P", positions+"");
+            codeAns.appendSplitComment(`end call ${functName}`);
+            codeAns.setValue(new Reference(funct.type));
+        }
+        return codeAns;
     }
 
     GO(env: Envmnt): object {

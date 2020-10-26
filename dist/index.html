@@ -133,23 +133,19 @@
         editor.setFontSize(16);
 
         editor.setValue('' +
-            'let a = ["hola", "mundo", "adios"];\n' +
-            'let b = 0;\n' +
-            'while(b<3){\n' +
-            '    console.log(a[b]);\n' +
-            '    b++;\n' +
+            'let a = 5;\n' +
+            'let b = 10;\n' +
+            '\n' +
+            'function resta(a: number, b: number){\n' +
+            '    return a-b;\n' +
             '}\n' +
-            'b = 0;\n' +
-            'while(b<3){\n' +
-            '    a[b] = a[b] + "aver";\n' +
-            '    console.log(a[b]);\n' +
-            '    b++;\n' +
+            '\n' +
+            'function suma(a: number, b: number){\n' +
+            '   return a+b;\n' +
             '}\n' +
-            'b = 0;\n' +
-            'while(b<3){\n' +
-            '    console.log(a[b]);\n' +
-            '    b++;\n' +
-            '}\n');
+            '\n' +
+            'suma(2,2);\n' +
+            'console.log(suma(2,2));');
 
 
         const scrollFactor = 500;

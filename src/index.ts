@@ -176,6 +176,7 @@ export function GetC3DCode(sentences: Array<Op>): string {
     let CCode = "";
 
     const env = new Envmnt(null, sentences);
+    const codeFunctions = env.GO_ALL_CODE_FUN();
     const code = env.GO_ALL_CODE();
 
     CCode += "#include <stdio.h> //Importar para el uso de Printf\n" +
@@ -188,7 +189,10 @@ export function GetC3DCode(sentences: Array<Op>): string {
         CCode += `t${i}`;
         CCode += i == Tmp.getCount() ? ";\n\n" : ",";
     }
-    CCode += "void main(){\n";
+
+    CCode += codeFunctions.getText();
+
+    CCode += "\n\nvoid main(){\n";
     CCode += code.getText();
     CCode += "\nreturn;\n" +
         "}";

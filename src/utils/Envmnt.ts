@@ -16,14 +16,17 @@ export class Envmnt extends Cntnr {
     public EndLabel: string;
     public ExitLabel: string;
 
-    constructor(owner: Cntnr, operations: Array<Op>, startLabel: string = "", endLabel: string = "", exitLabel = "") {
+    constructor(owner: Cntnr, operations: Array<Op>, startLabel: string = "", endLabel: string = "", exitLabel = "", returnVarRefName = "") {
         super(owner);
         this.operations = operations;
         this.StartLabel = startLabel;
         this.EndLabel = endLabel;
         this.ExitLabel = exitLabel;
+        this.returnVarRefName = returnVarRefName;
         this.typo = "Ambito";
-        this.Declare("graficar_ts", new Graficar_ts());
+        if(returnVarRefName!="") {
+            this.Declare("graficar_ts", new Graficar_ts(), true);
+        }
     }
 
     public GO_ALL(): Cntnr {
@@ -60,16 +63,33 @@ export class Envmnt extends Cntnr {
         return this.operations;
     }
 
-    public GO_ALL_CODE(env: Envmnt = null): Code{
-        const code = new Code();
+    public GO_ALL_CODE_FUN(env: Envmnt = null): Code {
+        const codeFunctions = new Code();
         for (let op of this.operations) {
-            try{
-                const result = op.ExeCode(env ? env : this);
-                code.append(result);
-            }catch (e) {
-                console.log(e.message);
+            if (op instanceof DeclareFunNode || op instanceof DeclareTypeStructureNode) {
+                try {
+                    const result = op.ExeCode(env ? env : this);
+                    codeFunctions.append(result);
+                } catch (e) {
+                    console.log(e.message)
+                }
             }
         }
-        return code;
+        return codeFunctions;
+    }
+
+    public GO_ALL_CODE(env: Envmnt = null): Code {
+        const codeMain = new Code();
+        for (let op of this.operations) {
+            if (!(op instanceof DeclareFunNode || op instanceof DeclareTypeStructureNode)) {
+                try {
+                    const result = op.ExeCode(env ? env : this);
+                    codeMain.append(result);
+                } catch (e) {
+                    console.log(e.message);
+                }
+            }
+        }
+        return codeMain;
     }
 }

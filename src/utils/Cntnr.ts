@@ -6,6 +6,7 @@ export abstract class Cntnr {
     public readonly props = new Map<string, Cntnr>();
     public readonly propsOrder: Array<string> = new Array<string>();
     public typo: string;
+    public returnVarRefName: string;
 
     protected constructor(owner?: Cntnr) {
         this.owner = owner || null;
@@ -42,7 +43,7 @@ export abstract class Cntnr {
         let propertiesTotal = 0;
         let ownerCntnr = this.owner;
         while (ownerCntnr != null) {
-            propertiesTotal += ownerCntnr.props.size - 1;
+            propertiesTotal += ownerCntnr.propsOrder.length;
             ownerCntnr = ownerCntnr.GetOwner();
         }
         return propertiesTotal;
@@ -52,6 +53,16 @@ export abstract class Cntnr {
         id = id.toUpperCase();
         const val = this.propsOrder.indexOf(id);
         return val !== -1 ? val + this.FatherPropertiesSize() : this.owner.GetPropertyIndex(id);
+    }
+
+    public GetEnvmtOfset() {
+        let val = this.propsOrder.length;
+        let ownerCntnr = this.owner;
+        while (ownerCntnr != null) {
+            val += ownerCntnr.propsOrder.length;
+            ownerCntnr = ownerCntnr.GetOwner();
+        }
+        return val;
     }
 
     public GetTSGraph(owner: string = ''): string {
@@ -77,10 +88,12 @@ export abstract class Cntnr {
         return value;
     }
 
-    public Declare(id: string, cntnr: Cntnr): void {
+    public Declare(id: string, cntnr: Cntnr, isFun = false): void {
         id = id.toUpperCase();
         this.props.set(id, cntnr);
-        this.propsOrder.push(id);
+        if(!isFun) {
+            this.propsOrder.push(id);
+        }
     }
 
     public GetTypo(): string {

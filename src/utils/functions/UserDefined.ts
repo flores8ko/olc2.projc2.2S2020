@@ -5,11 +5,15 @@ import {Cntnr} from "../Cntnr";
 import {Reference} from "../Reference";
 import {TSGraphControl} from "../TSGraphControl";
 import {DeclareFunParamNode} from "../../nodes/DeclareFunParamNode";
+import {Code} from "../C3D/Code";
+import {Lbl} from "../C3D/Lbl";
+import {DeclareVarNode} from "../../nodes/DeclareVarNode";
+import {DeclareVarListNode} from "../../nodes/DeclareVarListNode";
 
 export class UserDefined extends FunctionRepresent {
     private readonly src: Array<Op>;
     private readonly params: Array<Op>;
-    private readonly type: string;
+    public readonly type: string;
 
     constructor(src: Array<Op>, params: Array<Op>, type: string) {
         super();
@@ -36,6 +40,26 @@ export class UserDefined extends FunctionRepresent {
             references[i].PutValueOnReference(args[i]);
         }
         return env.GO_ALL();
+    }
+
+    public GetC3DCode(env: Envmnt, name: string) : Code{
+        const codeAns = new Code();
+        const exitLbl = Lbl.newLbl();
+        const funEnv = new Envmnt(env, this.src, "", "", exitLbl, `$${name.toUpperCase()}`);
+        codeAns.appendMethodStart(name, `start ${name}`);
+
+        const l = new Array<Op>();
+        l.push(new DeclareVarNode(null, `$${name}`));
+        const a = new DeclareVarListNode(null, this.type.toUpperCase(), l);
+        codeAns.append(a.ExeCode(funEnv));
+        for (let p of this.params) {
+            codeAns.append(p.ExeCode(funEnv))
+        }
+        codeAns.append(funEnv.GO_ALL_CODE());
+        codeAns.appendLabel(exitLbl);
+        codeAns.appendMethodEnd(`end ${name}`);
+        codeAns.setValue(new Reference(this.type));
+        return codeAns;
     }
 
     public GetTSGraph(owner: string = ''): string {

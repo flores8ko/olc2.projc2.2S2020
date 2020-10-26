@@ -1,5 +1,5 @@
 import {Cntnr} from "./Cntnr";
-import {DefaultValue, IsPrimitiveTypo, SemanticException} from "./Utils";
+import {DefaultValue, DefaultValueNoUndefined, IsPrimitiveTypo, SemanticException} from "./Utils";
 import {UNDEFINED} from "./PrimitiveTypoContainer";
 
 export class Reference extends Cntnr {
@@ -7,10 +7,10 @@ export class Reference extends Cntnr {
     private isConst: boolean = false;
     private tipoNombre: string = 'any';
 
-    constructor(tipoNombre: string = 'ANY', isConst: boolean = false) {
+    constructor(tipoNombre: string = 'ANY', isConst: boolean = false, isParam: boolean = false) {
         super();
         this.typo = "REFERENCE";
-        this.value = DefaultValue(tipoNombre);
+        this.value = isParam ? DefaultValueNoUndefined(tipoNombre) : DefaultValue(tipoNombre);
         this.tipoNombre = tipoNombre;
         this.isConst = isConst;
     }
