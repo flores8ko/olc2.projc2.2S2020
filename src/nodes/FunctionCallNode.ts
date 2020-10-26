@@ -5,10 +5,10 @@ import {Reference} from "../utils/Reference";
 import {FunctionRepresent} from "../utils/functions/FunctionRepresent";
 import {ReturnObj} from "./ReturnObj";
 import {UNDEFINED} from "../utils/PrimitiveTypoContainer";
-import {IsPrimitiveTypo, SemanticException} from "../utils/Utils";
+import {GetReferenceValueCode, IsPrimitiveTypo, SemanticException} from "../utils/Utils";
 import {UserDefined} from "../utils/functions/UserDefined";
 import {GraphvizNode} from "../utils/GraphvizNode";
-import { Code } from "../utils/C3D/Code";
+import {Code} from "../utils/C3D/Code";
 import {CreateIdVarNode} from "./CreateIdVarNode";
 import {Tmp} from "../utils/C3D/Tmp";
 
@@ -33,15 +33,50 @@ export class FunctionCallNode extends Op {
             let funct = (id as UserDefined);
             let functName = (this.name as CreateIdVarNode).GetId();
             let positions = env.GetEnvmtOfset();
+
+            const val = new Reference(funct.type, false, true);
+            codeAns.setValue(val);
+
+
+
             codeAns.appendSplitComment(`start call ${functName}`);
             codeAns.setPointer("P");
-            codeAns.appendSuma("P", positions+"");
+
+            let codeArgs = new Code();
+            const argsValues = new Array<Code>();
+            codeArgs.setPointer(Tmp.newTmp());
+            let argsIndex = 1;
+
+            for (let arg of this.args) {
+                let argValue = arg.ExeCode(env);
+                argValue = GetReferenceValueCode(argValue);
+                codeAns.append(argValue);
+                argsValues.push(argValue);
+            }
+
+            codeAns.appendSuma("P", positions + "");
+            codeArgs = new Code();
+            codeArgs.setPointer(Tmp.newTmp());
+            codeArgs.appendValueToPointer("P", "control de argumentos");
+            argsIndex = 1;
+            for (let arg of this.args) {
+                let argValue = argsValues[argsIndex -1];
+                codeArgs.appendSuma(codeArgs.getPointer(), "1", `argumento ${argsIndex}`);
+                codeArgs.appendAsignToStackPosition(codeArgs.getPointer(), argValue.getPointer());
+                argsIndex++;
+            }
+
+            codeAns.append(codeArgs);
             codeAns.appendMethodCall(functName, "llamada a funcion");
-            codeAns.setPointer(Tmp.newTmp());
-            codeAns.appendValueToPointer("P", "valor de retorno");
-            codeAns.appendResta("P", positions+"");
+            const codeRet = new Code();
+            codeRet.setPointer(Tmp.newTmp());
+            codeRet.appendValueToPointer("P", "valor de retorno");
+            codeAns.append(codeRet);
+            codeAns.setPointer("P");
+            codeAns.appendResta("P", positions + "");
+            codeAns.setPointer(codeRet.getPointer());
             codeAns.appendSplitComment(`end call ${functName}`);
-            codeAns.setValue(new Reference(funct.type));
+            codeAns.appendSplitComment("retorno " + funct.type);
         }
         return codeAns;
     }
@@ -69,7 +104,7 @@ export class FunctionCallNode extends Op {
                 if (ret instanceof Reference) {
                     ret = (ret as Reference).getValue();
                 }
-                if(funct.getType() !== ret.typo
+                if (funct.getType() !== ret.typo
                     && funct.getType() !== 'ANY'
                     && ret.typo !== 'NULL'
                     && ret.typo !== 'UNDEFINED'

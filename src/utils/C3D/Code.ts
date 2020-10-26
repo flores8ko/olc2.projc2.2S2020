@@ -256,7 +256,6 @@ export class Code {
     public ValueToStringCode(): Code {
         const toStringCode = new Code(this);
         toStringCode.appendSplitComment("START IMPRIMIENDO VALOR");
-        console.log(this);
         let type = this.value.typo;
         type = type.toUpperCase();
         switch (type) {
