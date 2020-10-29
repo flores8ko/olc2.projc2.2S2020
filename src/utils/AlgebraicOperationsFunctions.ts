@@ -5,6 +5,8 @@ import {BOOLEAN, NAN, NULL, NUMBER, STRING, UNDEFINED} from "./PrimitiveTypoCont
 import {Position} from "./ErrorsControl";
 
 export function Suma(lf: Cntnr, rt: Cntnr, position: Position = new Position()): Cntnr {
+    //console.log(lf);
+    //console.log(rt);
     lf instanceof Reference ? lf = (lf as Reference).getValue() : lf;
     rt instanceof Reference ? rt = (rt as Reference).getValue() : rt;
 

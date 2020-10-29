@@ -17,6 +17,15 @@ export class Code {
         }
     }
 
+    private RemoveTmpIfItsUsed(...tmps: any[]) {
+        for(let tmp of tmps) {
+            if (!`${tmp}`.startsWith("t")) {
+                return;
+            }
+            Tmp.removeUsedTmp(`${tmp}`);
+        }
+    }
+
     public appendLine(line: string, comment: string = "") {
         comment = comment !== "" ? `\t// ${comment}` : "";
         this.lines.push(`${line} ${comment}`);
@@ -35,6 +44,7 @@ export class Code {
         value: string | number,
         comment: string = "") {
         this.appendLine(`${this.pointer} = ${value};`, comment); //pointer = value;
+        this.RemoveTmpIfItsUsed(value);
     }
 
     public appendSuma(
@@ -43,6 +53,7 @@ export class Code {
         comment: string = ""
     ) {
         this.appendLine(`${this.pointer} = ${pointer1} + ${pointer2};`, comment); // pointer = pointer1 + pointer2;
+        this.RemoveTmpIfItsUsed(pointer1, pointer2);
     }
 
     public appendResta(
@@ -51,6 +62,7 @@ export class Code {
         comment: string = ""
     ) {
         this.appendLine(`${this.pointer} = ${pointer1} - ${pointer2};`, comment); // pointer = pointer1 - pointer2;
+        this.RemoveTmpIfItsUsed(pointer1, pointer2);
     }
 
     public appendMulti(
@@ -59,6 +71,7 @@ export class Code {
         comment: string = ""
     ) {
         this.appendLine(`${this.pointer} = ${pointer1} * ${pointer2};`, comment); // pointer = pointer1 * pointer2;
+        this.RemoveTmpIfItsUsed(pointer1, pointer2);
     }
 
     public appendDiv(
@@ -67,6 +80,7 @@ export class Code {
         comment: string = ""
     ) {
         this.appendLine(`${this.pointer} = ${pointer1} / ${pointer2};`, comment); // pointer = pointer1 / pointer2;
+        this.RemoveTmpIfItsUsed(pointer1, pointer2);
     }
 
     public appendMod(
@@ -75,12 +89,14 @@ export class Code {
         comment: string = ""
     ) {
         this.appendLine(`${this.pointer} = (int) ${pointer1} %  (int)${pointer2};`, comment); // pointer = pointer1 % pointer2;
+        this.RemoveTmpIfItsUsed(pointer1, pointer2);
     }
 
     public appendStackPointerPlusValue(
         value: string  | number,
         comment: string = "") {
         this.appendLine(`${this.pointer} = P + ${value};`, comment); // pointer = P + value;
+        this.RemoveTmpIfItsUsed(value);
     }
 
     public appendHeapPointerPlusValue(
@@ -88,6 +104,7 @@ export class Code {
         comment: string = ""
     ) {
         this.appendLine(`${this.pointer} = H + ${value}`, comment); // pointer = H + value;
+        this.RemoveTmpIfItsUsed(value);
     }
 
     public appendJMP(
@@ -104,6 +121,7 @@ export class Code {
         comment: string = ""
     ) {
         this.appendLine(`if(${pointer1} == ${pointer2}) goto ${label};`, comment); //if(pointer1 == pointer2) goto label;
+        this.RemoveTmpIfItsUsed(pointer1, pointer2);
     }
 
     public appendJNE(
@@ -113,6 +131,7 @@ export class Code {
         comment: string = ""
     ) {
         this.appendLine(`if(${pointer1} != ${pointer2}) goto ${label};`, comment); //if(pointer1 != pointer2) goto label;
+        this.RemoveTmpIfItsUsed(pointer1, pointer2);
     }
 
     public appendJG(
@@ -122,6 +141,7 @@ export class Code {
         comment: string = ""
     ) {
         this.appendLine(`if(${pointer1} > ${pointer2}) goto ${label};`, comment); //if(pointer1 > pointer2) goto label;
+        this.RemoveTmpIfItsUsed(pointer1, pointer2);
     }
 
     public appendJL(
@@ -131,6 +151,7 @@ export class Code {
         comment: string = ""
     ) {
         this.appendLine(`if(${pointer1} < ${pointer2}) goto ${label};`, comment); //if(pointer1 < pointer2) goto label;
+        this.RemoveTmpIfItsUsed(pointer1, pointer2);
     }
 
     public appendJGE(
@@ -140,6 +161,7 @@ export class Code {
         comment: string = ""
     ) {
         this.appendLine(`if(${pointer1} >= ${pointer2}) goto ${label};`, comment); //if(pointer1 >= pointer2) goto label;
+        this.RemoveTmpIfItsUsed(pointer1, pointer2);
     }
 
     public appendJLE(
@@ -149,6 +171,7 @@ export class Code {
         comment: string = ""
     ) {
         this.appendLine(`if(${pointer1} <= ${pointer2}) goto ${label};`, comment); //if(pointer1 <= pointer2) goto label;
+        this.RemoveTmpIfItsUsed(pointer1, pointer2);
     }
 
     public appendAsignToStackPosition(
@@ -157,6 +180,7 @@ export class Code {
         comment: string = ""
     ) {
         this.appendLine(`STACK[(int)${position}] = ${value};`, comment); // STACK [position] = value;
+        this.RemoveTmpIfItsUsed(position, value);
     }
 
     public appendAsignToHeapPosition(
@@ -165,6 +189,7 @@ export class Code {
         comment: string = ""
     ) {
         this.appendLine(`HEAP[(int)${position}] = ${value};`, comment); // HEAP [position] = value;
+        this.RemoveTmpIfItsUsed(position, value);
     }
 
     public appendAddToStackPointer(
@@ -172,6 +197,7 @@ export class Code {
         comment: string = ""
     ) {
         this.appendLine(`P = P + ${value};`, comment);
+        this.RemoveTmpIfItsUsed(value);
     }
 
     public appendAddToHeapPointer(
@@ -179,6 +205,7 @@ export class Code {
         comment: string = ""
     ) {
         this.appendLine(`H = H + ${value};`, comment);
+        this.RemoveTmpIfItsUsed(value);
     }
 
     public appendSubToStackPointer(
@@ -186,6 +213,7 @@ export class Code {
         comment: string = ""
     ) {
         this.appendLine(`P = P - ${value};`, comment);
+        this.RemoveTmpIfItsUsed(value);
     }
 
     public appendSubToHeapPointer(
@@ -193,6 +221,7 @@ export class Code {
         comment: string = ""
     ) {
         this.appendLine(`H = H - ${value};`, comment);
+        this.RemoveTmpIfItsUsed(value);
     }
 
     public GetFromStack(
@@ -200,6 +229,7 @@ export class Code {
         comment: string = ""
     ) {
         this.appendLine(`${this.pointer} = STACK[(int)${position}];`, comment); // pointer = STACK [position];
+        this.RemoveTmpIfItsUsed(position);
     }
 
     public GetFromHeap(
@@ -207,19 +237,22 @@ export class Code {
         comment: string = ""
     ) {
         this.appendLine(`${this.pointer} = HEAP[(int)${position}];`, comment); // pointer = HEAP [position];
+        this.RemoveTmpIfItsUsed(position);
     }
 
     public appendMethodStart(
         name: string,
         comment: string = ""
     ) {
+        Tmp.isOnFunction();
         this.isProc = true;
-        this.appendLine(`void ${name}(){`, comment);
+        this.appendLine(`void ${name.toLowerCase()}(){`, comment);
     }
 
     public appendMethodEnd(
         comment: string = ""
     ) {
+        Tmp.isNotOnFunction();
         this.appendLine(`return;`);
         this.appendLine(`}`, comment);
         this.isProc = false;
@@ -229,7 +262,7 @@ export class Code {
         name: string,
         comment: string = ""
     ) {
-        this.appendLine(`${name}();`, comment);
+        this.appendLine(`${name.toLowerCase()}();`, comment);
     }
 
     public appendPrintChar(
@@ -237,6 +270,7 @@ export class Code {
         comment: string = ""
     ) {
         this.appendLine(`printf("%c", (int)${char});`, comment);
+        this.RemoveTmpIfItsUsed(char);
     }
 
     public appendPrintInt(
@@ -244,6 +278,7 @@ export class Code {
         comment: string = ""
     ) {
         this.appendLine(`printf("%f", (double)${int});`, comment);
+        this.RemoveTmpIfItsUsed(int);
     }
 
     public appendPrintDouble(
@@ -251,6 +286,7 @@ export class Code {
         comment: string = ""
     ) {
         this.appendLine(`printf("%d", ${double});`, comment);
+        this.RemoveTmpIfItsUsed(double);
     }
 
     public ValueToStringCode(): Code {

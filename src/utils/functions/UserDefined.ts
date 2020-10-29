@@ -9,6 +9,7 @@ import {Code} from "../C3D/Code";
 import {Lbl} from "../C3D/Lbl";
 import {DeclareVarNode} from "../../nodes/DeclareVarNode";
 import {DeclareVarListNode} from "../../nodes/DeclareVarListNode";
+import {Tmp} from "../C3D/Tmp";
 
 export class UserDefined extends FunctionRepresent {
     private readonly src: Array<Op>;

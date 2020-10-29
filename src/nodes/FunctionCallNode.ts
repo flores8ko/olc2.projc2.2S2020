@@ -42,9 +42,8 @@ export class FunctionCallNode extends Op {
             codeAns.appendSplitComment(`start call ${functName}`);
             codeAns.setPointer("P");
 
-            let codeArgs = new Code();
+
             const argsValues = new Array<Code>();
-            codeArgs.setPointer(Tmp.newTmp());
             let argsIndex = 1;
 
             for (let arg of this.args) {
@@ -55,7 +54,24 @@ export class FunctionCallNode extends Op {
             }
 
             codeAns.appendSuma("P", positions + "");
-            codeArgs = new Code();
+
+            let TmpsForSave = Tmp.getTempsForSave();
+            let codeForSave = new Code();
+            codeForSave.setPointer(Tmp.newTmp());
+            codeForSave.appendValueToPointer("P");
+            let index = 0;
+            for (let tmpForSave of TmpsForSave) {
+                codeForSave.appendSuma(codeForSave.getPointer(), index + "", `guardando ${tmpForSave}`);
+                codeForSave.appendAsignToStackPosition(codeForSave.getPointer(), tmpForSave);
+                index++;
+            }
+
+
+            codeAns.append(codeForSave);
+
+            codeAns.appendSuma("P", TmpsForSave.length+"");
+
+            let codeArgs = new Code();
             codeArgs.setPointer(Tmp.newTmp());
             codeArgs.appendValueToPointer("P", "control de argumentos");
             argsIndex = 1;
@@ -73,7 +89,24 @@ export class FunctionCallNode extends Op {
             codeRet.appendValueToPointer("P", "valor de retorno");
             codeAns.append(codeRet);
             codeAns.setPointer("P");
+            codeAns.appendResta("P", TmpsForSave.length + "");
+
+
+            codeForSave = new Code();
+            codeForSave.setPointer(Tmp.newTmp());
+            codeForSave.appendValueToPointer("P");
+            index = 0;
+            for (let tmpForSave of TmpsForSave) {
+                codeForSave.appendSuma(codeForSave.getPointer(), index + "", `recuperando ${tmpForSave}`);
+                codeForSave.appendLine(`${tmpForSave} = STACK[(int)${codeForSave.getPointer()}];`);
+                index++;
+            }
+
+
+            codeAns.append(codeForSave);
+
             codeAns.appendResta("P", positions + "");
+
             codeAns.setPointer(codeRet.getPointer());
             codeAns.appendSplitComment(`end call ${functName}`);
             codeAns.appendSplitComment("retorno " + funct.type);

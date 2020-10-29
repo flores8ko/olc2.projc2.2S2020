@@ -7,6 +7,9 @@ export abstract class Cntnr {
     public readonly propsOrder: Array<string> = new Array<string>();
     public typo: string;
     public returnVarRefName: string;
+    public StartLabel: string;
+    public EndLabel: string;
+    public ExitLabel: string;
 
     protected constructor(owner?: Cntnr) {
         this.owner = owner || null;

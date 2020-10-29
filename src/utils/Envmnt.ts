@@ -12,17 +12,14 @@ import {Code} from "./C3D/Code";
 export class Envmnt extends Cntnr {
     public readonly Extra = new Map<string, any>();
     private readonly operations: Array<Op>;
-    public StartLabel: string;
-    public EndLabel: string;
-    public ExitLabel: string;
 
     constructor(owner: Cntnr, operations: Array<Op>, startLabel: string = "", endLabel: string = "", exitLabel = "", returnVarRefName = "") {
         super(owner);
         this.operations = operations;
         this.StartLabel = startLabel;
         this.EndLabel = endLabel;
-        this.ExitLabel = exitLabel;
-        this.returnVarRefName = returnVarRefName;
+        this.ExitLabel = owner ? owner.ExitLabel !== "" ? owner.ExitLabel : exitLabel : exitLabel;
+        this.returnVarRefName = owner ? owner.returnVarRefName !== "" ? owner.returnVarRefName : returnVarRefName : returnVarRefName;
         this.typo = "Ambito";
         if(returnVarRefName!="") {
             this.Declare("graficar_ts", new Graficar_ts(), true);

@@ -17,17 +17,19 @@ export class ReturnNode extends Op {
     }
 
     public GOCode(env: Envmnt): Code {
-        let val = new UNDEFINED();
+        //let val = new UNDEFINED();
+        const codeAns = new Code();
+        codeAns.setPointer(Tmp.newTmp());
+
         let valCode = new Code();
         if(this.value !== null) {
-            val = this.value.Exe(env) as Cntnr;
+            //val = this.value.Exe(env) as Cntnr;
             valCode = this.value.ExeCode(env);
             valCode = GetReferenceValueCode(valCode);
         }
-        const codeAns = new Code();
-        codeAns.setValue(new ReturnObj(val));
+
+        codeAns.setValue(new ReturnObj(valCode.getValue()));
         //TODO asignar valor de return a punto de retorno en funcion.
-        codeAns.setPointer(Tmp.newTmp());
         let index = env.GetPropertyIndex(env.returnVarRefName);
 
         const codeAsign = new Code(valCode);

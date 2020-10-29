@@ -6,7 +6,7 @@ import {GraphvizNode} from "../utils/GraphvizNode";
 import { Code } from "../utils/C3D/Code";
 import {GetReferenceValueCode} from "../utils/Utils";
 import {Tmp} from "../utils/C3D/Tmp";
-import {STRING} from "../utils/PrimitiveTypoContainer";
+import {NUMBER, STRING} from "../utils/PrimitiveTypoContainer";
 import {Lbl} from "../utils/C3D/Lbl";
 
 export class SumNode extends Op {
@@ -25,19 +25,38 @@ export class SumNode extends Op {
 
         const codeAns = new Code(codeLf, codeRt);
         codeAns.setPointer(Tmp.newTmp());
-        let value = Suma((this.lf.Exe(env) as Cntnr), (this.rt.Exe(env) as Cntnr), this.position);
+        let value = Suma(codeLf.getValue(), codeRt.getValue(), this.position);
         if (value instanceof STRING) {
+
+            if (!(codeLf.getValue() instanceof STRING)) {
+                const codeRtToString = this.valToString(codeLf);
+                codeAns.append(codeRtToString);
+                codeLf.setPointer(codeRtToString.getPointer());
+                codeLf.setValue(codeRtToString.getValue());
+            }
+
+            if (!(codeRt.getValue() instanceof STRING)) {
+                const codeRtToString = this.valToString(codeRt);
+                codeAns.append(codeRtToString);
+                codeRt.setPointer(codeRtToString.getPointer());
+                codeRt.setValue(codeRtToString.getValue());
+            }
+
             codeAns.appendSplitComment("START STRING concat");
             codeAns.appendValueToPointer("H");
+
+
             const newStr = new Code();
             newStr.setPointer(Tmp.newTmp());
             newStr.GetFromHeap(codeLf.getPointer());
+            let realSize1 = Tmp.newTmp();
 
 
             const codeStr1Cicle = new Code();
             codeStr1Cicle.setPointer(Tmp.newTmp());
             codeStr1Cicle.appendValueToPointer(codeLf.getPointer());
             newStr.append(codeStr1Cicle);
+            newStr.appendLine(`${realSize1} = ${newStr.getPointer()};`, "guardo tamaño real 1er string")
             newStr.appendSuma(newStr.getPointer(), codeStr1Cicle.getPointer());
 
             let codePos = new Code();
@@ -71,11 +90,13 @@ export class SumNode extends Op {
             const newStr2 = new Code();
             newStr2.setPointer(Tmp.newTmp());
             newStr2.GetFromHeap(codeRt.getPointer());
+            let realSize2 = Tmp.newTmp();
 
             const codeStr2Cicle = new Code();
             codeStr2Cicle.setPointer(Tmp.newTmp());
             codeStr2Cicle.appendValueToPointer(codeRt.getPointer());
             newStr2.append(codeStr2Cicle);
+            newStr2.appendLine(`${realSize2} = ${newStr2.getPointer()};`, "guardo tamaño real 2do string");
             newStr2.appendSuma(newStr2.getPointer(), codeStr2Cicle.getPointer());
 
 
@@ -106,8 +127,9 @@ export class SumNode extends Op {
 
             codePos = new Code();
             codePos.setPointer(Tmp.newTmp());
-            codePos.appendSuma(newStr.getPointer(), newStr2.getPointer());
-            codePos.appendAsignToHeapPosition(codeAns.getPointer(), codePos.getPointer());
+            codePos.appendSuma(realSize1, realSize2, "suma de tamaños de string 1 y 2");
+            codePos.appendSuma(codePos.getPointer(), "1");
+            codePos.appendAsignToHeapPosition(codeAns.getPointer(), codePos.getPointer(), "añadir el tamaño de string");
             codeAns.append(codePos);
             codeAns.appendAddToHeapPointer(codePos.getPointer(), "string size");
             codeAns.appendSplitComment("End string concat");
@@ -120,6 +142,8 @@ export class SumNode extends Op {
     }
 
     GO(env: Envmnt): object {
+        console.log(this.lf);
+        console.log(this.rt);
         return Suma((this.lf.Exe(env) as Cntnr), (this.rt.Exe(env) as Cntnr), this.position);
     }
 
@@ -129,6 +153,94 @@ export class SumNode extends Op {
 
     GetTSGraph(): string {
         return "";
+    }
+
+    private valToString(codeValue: Code): Code{
+        let codeToString = new Code();
+        codeToString.appendSplitComment("start pasando a string");
+
+        const codeCopiaNumero = new Code();
+        codeCopiaNumero.setPointer(Tmp.newTmp());
+        let isNegativeLbl = Lbl.newLbl();
+        let endLbl = Lbl.newLbl();
+        let negativoBandera = Tmp.newTmp();
+        codeCopiaNumero.appendJL(codeValue.getPointer(), "0", isNegativeLbl);
+        codeCopiaNumero.appendValueToPointer(codeValue.getPointer(), "no es negativo");
+        codeCopiaNumero.appendLine(`${negativoBandera} = 0;`, "bandera no es negativo");
+        codeCopiaNumero.appendJMP(endLbl);
+        codeCopiaNumero.appendLabel(isNegativeLbl);
+        codeCopiaNumero.appendMulti(codeValue.getPointer(), "-1","si es negativo");
+        codeCopiaNumero.appendLine(`${negativoBandera} = 1;`, "bandera si es negativo");
+        codeCopiaNumero.appendLabel(endLbl);
+        codeToString.append(codeCopiaNumero);
+
+        let codeSize = new Code();
+        codeSize.setPointer(Tmp.newTmp());
+        codeSize.appendValueToPointer("0");
+        let whileStartLbl = Lbl.newLbl();
+        let whileEndLbl = Lbl.newLbl();
+        codeSize.appendLabel(whileStartLbl, "ciclo para tamaño");
+        codeSize.appendJLE("(int)"+codeCopiaNumero.getPointer(), "0", whileEndLbl);
+        codeSize.appendLine(`${codeCopiaNumero.getPointer()} = ${codeCopiaNumero.getPointer()} / 10;`, "divide la copia del numero");
+        codeSize.appendSuma(codeSize.getPointer(), "1", "incrementa el tamaño del string");
+        codeSize.appendJMP(whileStartLbl);
+        codeSize.appendLabel(whileEndLbl, "termina ciclo para tamaño");
+        codeToString.append(codeSize);
+
+        isNegativeLbl = Lbl.newLbl();
+        endLbl = Lbl.newLbl();
+
+        codeToString.appendJE(negativoBandera, "1", isNegativeLbl);
+        codeToString.appendLine(`${codeCopiaNumero.getPointer()} = ${codeValue.getPointer()};`, "si no es negativo solo copia el numero");
+        codeToString.appendJMP(endLbl);
+        codeToString.appendLabel(isNegativeLbl, "si es negativo va a negativo");
+        codeToString.appendLine(`${codeSize.getPointer()} = ${codeSize.getPointer()} + 1;`, "aumenta en uno el string");
+        codeToString.appendLine(`${codeCopiaNumero.getPointer()} = ${codeValue.getPointer()} * -1;`, "multiplica por menos uno");
+        codeToString.appendLabel(endLbl);
+
+        const codeNewString = new Code();
+        codeNewString.appendSplitComment("start asign string");
+        codeNewString.setPointer(Tmp.newTmp());
+        codeNewString.appendValueToPointer("H", "string start");
+
+        const codePos = new Code();
+        codePos.setPointer(Tmp.newTmp());
+        codePos.appendSuma(codeNewString.getPointer(), 0 + "", "str["+0+"]");
+        codePos.appendAsignToHeapPosition(codePos.getPointer(), codeSize.getPointer(), "str["+0+"]="+codeSize.getPointer()+" (strLth)");
+
+        codeNewString.append(codePos);
+
+
+
+        let codeCopyToHeap = new Code();
+        codeCopyToHeap.setPointer(Tmp.newTmp());
+        let stringSize = Tmp.newTmp();
+        codeCopyToHeap.appendLine(`${stringSize} = ${codeSize.getPointer()};`, "guardo tamaño de string");
+        codeCopyToHeap.appendValueToPointer("0");
+        whileStartLbl = Lbl.newLbl();
+        whileEndLbl = Lbl.newLbl();
+        let tmpForChr = Tmp.newTmp();
+
+        codeCopyToHeap.appendLabel(whileStartLbl);
+        codeCopyToHeap.appendJLE("(int)" + codeCopiaNumero.getPointer(), "0", whileEndLbl);
+        codeCopyToHeap.appendSuma(codeNewString.getPointer(), codeSize.getPointer(), "suma puntero string + size");
+        codeCopyToHeap.appendLine(`${tmpForChr} = (int)${codeCopiaNumero.getPointer()} % 10;`, "cuenta para numero");
+        codeCopyToHeap.appendLine(`${tmpForChr} = ${tmpForChr} + 48;`, "añade ascii");
+        codeCopyToHeap.appendAsignToHeapPosition(codeCopyToHeap.getPointer(), tmpForChr, "añade char a heap");
+        codeCopyToHeap.appendLine(`${codeCopiaNumero.getPointer()} = ${codeCopiaNumero.getPointer()} / 10;`, "siguiente numero");
+        codeCopyToHeap.appendLine( `${codeSize.getPointer()} = ${codeSize.getPointer()} - 1;`, "reduce size");
+        codeCopyToHeap.appendJMP(whileStartLbl);
+        codeCopyToHeap.appendLabel(whileEndLbl);
+
+        codeCopyToHeap.appendAddToHeapPointer(stringSize);
+        codeNewString.append(codeCopyToHeap);
+        codeNewString.appendSplitComment("end asign string");
+        codeToString.append(codeNewString);
+        codeToString.appendSplitComment("end pasando a string");
+        codeToString.setPointer(codeNewString.getPointer());
+        codeToString.setValue(new STRING());
+
+        return codeToString;
     }
 
 }
