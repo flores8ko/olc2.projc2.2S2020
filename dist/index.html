@@ -133,28 +133,13 @@
         editor.setFontSize(16);
 
         editor.setValue('' +
-            'console.log("hola " +  100);\n' +
-            '/*function factorial (n: number): number { \n' +
-            '\tif (n <= 0){ \n' +
-            '\t\treturn 1; \n' +
-            '\t}else{\n' +
-            '\t    return n * factorial(n-1); \n' +
-            '\t}\n' +
-            '}\n' +
-            'let a = 5;\n' +
-            'let b = 10;\n' +
-            '\n' +
-            'function resta(a: number, b: number):number{\n' +
-            '    return a-b;\n' +
-            '}\n' +
-            '\n' +
-            'function suma(a: number, b: number):number{\n' +
-            '   return a+b;\n' +
-            '}\n' +
-            '\n' +
-            'suma(2,2);\n' +
-            'console.log(suma(2,2));\n\n' +
-            'console.log(factorial(10));*/');
+            'function fibonacci(n: number): number {\n' +
+            '    if (n <= 1) {\n' +
+            '        return n;\n' +
+            '    }\n' +
+            '    return fibonacci(n - 1) + fibonacci(n - 2);\n' +
+            '}' +
+            'console.log(fibonacci(10));');
 
 
         const scrollFactor = 500;

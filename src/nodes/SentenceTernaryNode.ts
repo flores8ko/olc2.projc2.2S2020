@@ -33,7 +33,8 @@ export class SentenceTernaryNode extends Op {
         codeTernary.appendJE(cond.getPointer(), "0", lblFalse);
 
         codeTernary.appendSplitComment("Start True Sentence");
-        const codeTrue = this.trueSentence.ExeCode(env);
+        let codeTrue = this.trueSentence.ExeCode(env);
+        codeTrue = GetReferenceValueCode(codeTrue);
         codeTernary.append(codeTrue);
         codeTernary.appendValueToPointer(codeTrue.getPointer());
         codeTernary.appendJMP(lblEnd);
@@ -41,7 +42,8 @@ export class SentenceTernaryNode extends Op {
 
         codeTernary.appendLabel(lblFalse);
         codeTernary.appendSplitComment("Start False Sentence");
-        const codeFalse = this.falseSentence.ExeCode(env);
+        let codeFalse = this.falseSentence.ExeCode(env);
+        codeFalse = GetReferenceValueCode(codeFalse);
         codeTernary.append(codeFalse);
         codeTernary.appendValueToPointer(codeFalse.getPointer());
         codeTernary.appendSplitComment("End False Sentence");

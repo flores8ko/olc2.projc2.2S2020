@@ -34,6 +34,7 @@ export class ReturnNode extends Op {
 
         const codeAsign = new Code(valCode);
         codeAns.appendStackPointerPlusValue(index, "return pointer to stack");
+        codeAsign.appendLine(`${codeAns.getPointer()} = P;`);
         codeAsign.appendAsignToStackPosition(codeAns.getPointer(), valCode.getPointer());
         codeAns.append(codeAsign);
         codeAns.appendJMP(env.ExitLabel !== "" ? env.ExitLabel: env.EndLabel);

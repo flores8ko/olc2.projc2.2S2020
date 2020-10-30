@@ -56,6 +56,7 @@ export class FunctionCallNode extends Op {
             codeAns.appendSuma("P", positions + "");
 
             let TmpsForSave = Tmp.getTempsForSave();
+            console.log(TmpsForSave);
             let codeForSave = new Code();
             codeForSave.setPointer(Tmp.newTmp());
             codeForSave.appendValueToPointer("P");
