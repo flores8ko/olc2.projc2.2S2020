@@ -5,11 +5,15 @@ import {GraphvizNode} from "../utils/GraphvizNode";
 import { Code } from "../utils/C3D/Code";
 
 export class UndefinedNode extends Op {
-    public GOCode(env: Envmnt): Code {
-        throw new Error("Method not implemented.");
-    }
     constructor() {
         super();
+    }
+
+    public GOCode(env: Envmnt): Code {
+        const code = new Code();
+        code.setValue(new UNDEFINED());
+        code.setPointer(0);
+        return code;
     }
 
     GO(env: Envmnt) {
