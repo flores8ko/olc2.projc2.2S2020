@@ -324,6 +324,10 @@ export class Code {
 
                 toStringCode.append(controlCode);
                 break;
+            case "NULL":
+            case "UNDEFINED":
+                toStringCode.appendPrintInt(-1);
+                break;
         }
         toStringCode.appendSplitComment("END IMPRIMIENDO VALOR");
         return toStringCode;

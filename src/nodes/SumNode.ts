@@ -142,8 +142,6 @@ export class SumNode extends Op {
     }
 
     GO(env: Envmnt): object {
-        console.log(this.lf);
-        console.log(this.rt);
         return Suma((this.lf.Exe(env) as Cntnr), (this.rt.Exe(env) as Cntnr), this.position);
     }
 

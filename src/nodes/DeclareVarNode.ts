@@ -13,6 +13,7 @@ export class DeclareVarNode extends Op {
     private readonly name: string;
     private value: Cntnr = new UNDEFINED();
     private valueOp: Op;
+    private valueOpCode: Op;
     private valueCode: Code = new Code();
     private isConst: boolean;
     private tipoNombre: string;
@@ -57,19 +58,22 @@ export class DeclareVarNode extends Op {
         return null;
     }
 
-    public AddValue(value: Cntnr = new UNDEFINED(), isConst: boolean = false, tipoNombre: string = 'ANY') {
+    public AddValue(value: Cntnr = new UNDEFINED(), isConst: boolean = false, tipoNombre: string = 'ANY', valOp: Op = null) {
         this.value = value;
         this.isConst = isConst;
         if (tipoNombre === '') {
             tipoNombre = 'ANY';
         }
         this.tipoNombre = tipoNombre.toUpperCase();
+        this.valueOp = valOp ? valOp : this.valueOp;
     }
 
     private AddVarOnDeclare(env: Envmnt, identifier: string): void {
         let value: Cntnr = this.value;
+        console.log(value);
         if(this.valueOp != null) {
             value = this.valueOp.Exe(env) as Cntnr;
+            console.log(value);
             this.valueCode = this.valueOp.ExeCode(env);
             this.value = value;
         }

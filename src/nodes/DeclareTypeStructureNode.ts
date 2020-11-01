@@ -6,8 +6,11 @@ import { Code } from "../utils/C3D/Code";
 
 export class DeclareTypeStructureNode extends Op {
     public GOCode(env: Envmnt): Code {
-        throw new Error("Method not implemented.");
+        const structure = new ObjectStructure(this.properties);
+        ObjectsStructures.objects.set(this.name.toUpperCase(), structure);
+        return new Code();
     }
+
     private readonly name: string;
     private readonly properties: Map<string, string>;
 

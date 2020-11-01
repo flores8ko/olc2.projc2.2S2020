@@ -12,7 +12,7 @@ export class NullNode extends Op {
     public GOCode(env: Envmnt): Code {
         const code = new Code();
         code.setValue(new NULL());
-        code.setPointer(0);
+        code.setPointer(-1);
 
         //TODO tmpmanager ???
         return code;

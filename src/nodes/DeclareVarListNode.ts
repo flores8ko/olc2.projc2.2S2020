@@ -25,7 +25,7 @@ export class DeclareVarListNode extends Op {
         for (let op of this.declarationOps) {
             try {
                 if (this.value !== null) {
-                    (op as DeclareVarNode).AddValue(this.value.Exe(env) as Cntnr, this.isConst, this.tipoNombre);
+                    (op as DeclareVarNode).AddValue(this.value.Exe(env) as Cntnr, this.isConst, this.tipoNombre, this.value);
                 }else{
                     (op as DeclareVarNode).AddValue(new UNDEFINED(), this.isConst, this.tipoNombre);
                 }

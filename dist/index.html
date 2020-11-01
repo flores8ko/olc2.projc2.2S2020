@@ -133,17 +133,25 @@
         editor.setFontSize(16);
 
         editor.setValue('' +
-            'function fibonacci(n: number): string {\n' +
-            '    switch(n){\n' +
-            '       case 0: \n' +
-            '           return "cero";\n' +
-            '           case 1:\n' +
-            '               return "uno";\n' +
-            '           default:\n' +
-            '               return "aver";\n' +
-            '   }\n' +
-            '}' +
-            'console.log(fibonacci(10));');
+            '\n' +
+            '\n' +
+            'type AVLNode = {\n' +
+            '    left: AVLNode,\n' +
+            '    right: AVLNode,\n' +
+            '    height: number,\n' +
+            '    value: number\n' +
+            '};\n' +
+            '\n' +
+            '\n' +
+            'let node: AVLNode = {\n' +
+            '    left: null,\n' +
+            '    right: null,\n' +
+            '    height: 5,\n' +
+            '    value: 10\n' +
+            '};\n' +
+            '\n' +
+            '\n' +
+            'console.log(node.height);');
 
 
         const scrollFactor = 500;

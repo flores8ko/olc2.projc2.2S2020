@@ -7,6 +7,7 @@ import {GraphvizNode} from "../utils/GraphvizNode";
 import { Code } from "../utils/C3D/Code";
 import {Tmp} from "../utils/C3D/Tmp";
 import {GetReferenceValueCode} from "../utils/Utils";
+import {Reference} from "../index";
 
 export class ReturnNode extends Op {
     private readonly value: Op;
@@ -43,7 +44,10 @@ export class ReturnNode extends Op {
 
     GO(env: Envmnt): object {
         if(this.value !== null) {
-            const value = this.value.Exe(env);
+            let value = this.value.Exe(env);
+            if (value instanceof Reference) {
+                value = (value as Reference).getValue();
+            }
             return new ReturnObj(value as Cntnr);
         }
         return new ReturnObj(new UNDEFINED());
