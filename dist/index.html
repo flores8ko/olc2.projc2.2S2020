@@ -133,11 +133,15 @@
         editor.setFontSize(16);
 
         editor.setValue('' +
-            'function fibonacci(n: number): number {\n' +
-            '    if (n <= 1) {\n' +
-            '        return n;\n' +
-            '    }\n' +
-            '    return fibonacci(n - 1) + fibonacci(n - 2);\n' +
+            'function fibonacci(n: number): string {\n' +
+            '    switch(n){\n' +
+            '       case 0: \n' +
+            '           return "cero";\n' +
+            '           case 1:\n' +
+            '               return "uno";\n' +
+            '           default:\n' +
+            '               return "aver";\n' +
+            '   }\n' +
             '}' +
             'console.log(fibonacci(10));');
 
@@ -192,13 +196,14 @@
             e.preventDefault();
 
             ast.ErrorsControl.clearStructures();
+
             function setErrors() {
                 const table = $('#table-body');
                 ast.ErrorsControl.GetErrors().forEach((error, index) => {
                     table.append
                     (
                         `<tr>
-                            <td>${index+1}</td>
+                            <td>${index + 1}</td>
                             <td>${error.typo}</td>
                             <td>${error.row}</td>
                             <td>${error.column}</td>
@@ -248,13 +253,14 @@
 
         $('#run').click((e) => {
             ast.ErrorsControl.clearStructures();
+
             function setErrors() {
                 const table = $('#table-body');
                 ast.ErrorsControl.GetErrors().forEach((error, index) => {
                     table.append
                     (
                         `<tr>
-                            <td>${index+1}</td>
+                            <td>${index + 1}</td>
                             <td>${error.typo}</td>
                             <td>${error.row}</td>
                             <td>${error.column}</td>

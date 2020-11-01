@@ -8,14 +8,12 @@ import {BreakObj} from "./BreakObj";
 import {ReturnObj} from "./ReturnObj";
 import {ContinueObj} from "./ContinueObj";
 import {CaseNode} from "./CaseNode";
-import {SemanticException} from "../utils/Utils";
+import {GetReferenceValueCode, SemanticException} from "../utils/Utils";
 import {GraphvizNode} from "../utils/GraphvizNode";
 import { Code } from "../utils/C3D/Code";
+import {Lbl} from "../utils/C3D/Lbl";
 
 export class SwitchNode extends Op {
-    public GOCode(env: Envmnt): Code {
-        throw new Error("Method not implemented.");
-    }
     private readonly condition: Op;
     private readonly cases: Array<CaseNode>;
 
@@ -23,6 +21,39 @@ export class SwitchNode extends Op {
         super(position);
         this.condition = condition;
         this.cases = cases;
+    }
+
+    public GOCode(env: Envmnt): Code {
+        const cond = GetReferenceValueCode(this.condition.ExeCode(env));
+        const codeAns = new Code(cond);
+
+        let defaultCount = 0;
+        for (let Case of this.cases) {
+            if (Case.getConditionValue() === null) {
+                defaultCount++;
+            }
+        }
+
+        if (defaultCount > 1) {
+            throw new SemanticException("No pueden exisistir mas de una sentencia 'default' dentro de un ciclo switch", this.position);
+        }
+
+        for (let Case of this.cases) {
+            let endCase = "";
+            if(Case.getConditionValue() !== null) {
+                const condValue = GetReferenceValueCode(Case.getConditionValue().ExeCode(env));
+                codeAns.append(condValue);
+                endCase =  Lbl.newLbl();
+                codeAns.appendJNE(cond.getPointer(), condValue.getPointer(), endCase, "salto de caso si no son iguales");
+            }
+            const envCase = new Envmnt(env, Case.getSentences());
+            const codeCase = envCase.GO_ALL_CODE();
+            codeAns.append(codeCase);
+            if(Case.getConditionValue() !== null) {
+                codeAns.appendLabel(endCase, "fin de caso");
+            }
+        }
+        return codeAns;
     }
 
     GO(env: Envmnt): object {
