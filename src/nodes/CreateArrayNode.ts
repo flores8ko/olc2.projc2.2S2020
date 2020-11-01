@@ -14,7 +14,6 @@ export class CreateArrayNode extends Op {
     constructor(position: any, vals: Array<Op>) {
         super(position);
         this.vals = vals;
-        console.log(this.vals);
     }
 
     public GOCode(env: Envmnt): Code {

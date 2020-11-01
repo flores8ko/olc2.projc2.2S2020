@@ -135,23 +135,52 @@
         editor.setValue('' +
             '\n' +
             '\n' +
-            'type AVLNode = {\n' +
-            '    left: AVLNode,\n' +
-            '    right: AVLNode,\n' +
-            '    height: number,\n' +
-            '    value: number\n' +
-            '};\n' +
+            'function getPivot(value : number) : number{\n' +
+            '    return value % 1 == 0 ? value : value - 0.5;\n' +
+            '}\n' +
             '\n' +
+            'function swap(i : number, j: number, array : number[]) : void{\n' +
+            '    const temp = array[i];\n' +
+            '    array[i] = array[j];\n' +
+            '    array[j] = temp;\n' +
+            '}\n' +
             '\n' +
-            'let node: AVLNode = {\n' +
-            '    left: null,\n' +
-            '    right: null,\n' +
-            '    height: 5,\n' +
-            '    value: 10\n' +
-            '};\n' +
+            'function quickSort(low: number, high: number, array : number[]) : void{\n' +
+            '    let i = low;\n' +
+            '    let j = high;\n' +
+            '    let pivot = array[getPivot((low + high) / 2)];\n' +
             '\n' +
+            '    while(i <= j){\n' +
+            '        while(array[i] < pivot){\n' +
+            '            i++;\n' +
+            '        }\n' +
             '\n' +
-            'console.log(node.height);');
+            '        while(array[j] > pivot){\n' +
+            '            j--;\n' +
+            '        }\n' +
+            '        if(i <= j){\n' +
+            '            swap(i, j, array);\n' +
+            '            i++;\n' +
+            '            j--;\n' +
+            '        }\n' +
+            '    }\n' +
+            '\n' +
+            '    if(low < j){\n' +
+            '        quickSort(low, j, array);\n' +
+            '    }\n' +
+            '    if(i < high){\n' +
+            '        quickSort(i, high, array);\n' +
+            '    }\n' +
+            '}\n' +
+            '\n' +
+            'let array : number[] = [8, 48, 69, 12, 25, 98, 71, 33, 129, 5];\n' +
+            'quickSort(0, 9, array);\n' +
+            'let i = 0;\n' +
+            'console.log("-------------QUICK SORT----------");\n' +
+            'while(i<10){\n' +
+            '    console.log(array[i]);\n' +
+            '    i++;\n' +
+            '}');
 
 
         const scrollFactor = 500;

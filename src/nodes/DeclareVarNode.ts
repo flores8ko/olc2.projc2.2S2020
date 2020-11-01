@@ -70,10 +70,8 @@ export class DeclareVarNode extends Op {
 
     private AddVarOnDeclare(env: Envmnt, identifier: string): void {
         let value: Cntnr = this.value;
-        console.log(value);
         if(this.valueOp != null) {
             value = this.valueOp.Exe(env) as Cntnr;
-            console.log(value);
             this.valueCode = this.valueOp.ExeCode(env);
             this.value = value;
         }

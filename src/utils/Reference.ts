@@ -10,8 +10,8 @@ export class Reference extends Cntnr {
     constructor(tipoNombre: string = 'ANY', isConst: boolean = false, isParam: boolean = false) {
         super();
         this.typo = "REFERENCE";
-        this.value = isParam ? DefaultValueNoUndefined(tipoNombre) : DefaultValue(tipoNombre);
-        this.tipoNombre = tipoNombre;
+        this.tipoNombre = tipoNombre === 'VOID' ? 'ANY' : tipoNombre;
+        this.value = isParam ? DefaultValueNoUndefined(this.tipoNombre) : DefaultValue(this.tipoNombre);
         this.isConst = isConst;
     }
 
