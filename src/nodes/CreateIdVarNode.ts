@@ -18,7 +18,7 @@ export class CreateIdVarNode extends Op {
         code.appendSplitComment(`start obtiene variable: ${this.id}`);
         code.setValue(FindVar(env, this.id));
         code.setPointer(Tmp.newTmp());
-        code.appendStackPointerPlusValue(env.GetPropertyIndex(this.id) + "", "obtiene " + this.id);
+        code.appendStackPointerPlusValue(env.GetPropertyIndex(this.id), "obtiene " + this.id);
         code.appendSplitComment(`end obtiene variable: ${this.id}`);
         //TODO tmpmanager ??
         return code;

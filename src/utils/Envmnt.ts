@@ -44,7 +44,7 @@ export class Envmnt extends Cntnr {
                         return result as Cntnr;
                     }
                 } catch (e) {
-                    console.log(e.message)
+                    console.log(e.message, op)
                 }
             }
         }
@@ -83,7 +83,7 @@ export class Envmnt extends Cntnr {
                     const result = op.ExeCode(env ? env : this);
                     codeMain.append(result);
                 } catch (e) {
-                    console.log(e.message);
+                    console.log(e.message, op);
                 }
             }
         }

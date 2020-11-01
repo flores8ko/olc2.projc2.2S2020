@@ -83,8 +83,8 @@ export function GetObjectValue(typo: string): Cntnr {
 export function FindVar(cont: Cntnr, identifier: string): Cntnr {
     let ownerCntnr = cont;
 
-    while (ownerCntnr != null){
-        if(ownerCntnr.GetProperty(identifier) !== undefined){
+    while (ownerCntnr != null) {
+        if (ownerCntnr.GetProperty(identifier) !== undefined) {
             return ownerCntnr.GetProperty(identifier);
         }
         ownerCntnr = ownerCntnr.GetOwner();
@@ -108,10 +108,10 @@ export function TSGraph2(sentences: Array<Op>): string {
     let value = '';
     const graphId = TSGraphControl.GetGraphId();
     value += `subgraph cluster_${graphId} { \n`;
-        value += 'style=filled;\n' +
-            'color="#2BBBAD";\n' +
-            'fillcolor="#1E222A";\n';
-        value += 'node [color="#2BBBAD" fontcolor="#2BBBAD" shape="rectangle"] \n';
+    value += 'style=filled;\n' +
+        'color="#2BBBAD";\n' +
+        'fillcolor="#1E222A";\n';
+    value += 'node [color="#2BBBAD" fontcolor="#2BBBAD" shape="rectangle"] \n';
     sentences.forEach(sentence => {
         value += sentence.GetTSGraph();
     });
@@ -127,14 +127,14 @@ export function PassPropsAndFuncs(father: Envmnt, son: Envmnt) {
 }
 
 export function GetReferenceValueCode(code: Code): Code {
-    if(!(code.getValue() instanceof Reference))
+    if (!(code.getValue() instanceof Reference))
         return code;
     const codeAns = new Code(code);
     codeAns.setValue((code.getValue() as Reference).getValue());
     codeAns.setPointer(Tmp.newTmp());
-    if(!code.isHeap) {
+    if (!code.isHeap) {
         codeAns.GetFromStack(code.getPointer());
-    }else {
+    } else {
         codeAns.GetFromHeap(code.getPointer());
         codeAns.isHeap = code.isHeap;
     }
@@ -164,7 +164,7 @@ export function LogicWhile(env: Envmnt, condition: Op, sentences: Array<Op>, ext
         if (ret instanceof ReturnObj) {
             return ret;
         }
-        if(ret instanceof ContinueObj){
+        if (ret instanceof ContinueObj) {
             continue;
         }
 
@@ -212,7 +212,7 @@ export function LogicDoWhile(env: Envmnt, condition: Op, sentences: Array<Op>, e
         if (ret instanceof ReturnObj) {
             return ret;
         }
-        if(ret instanceof ContinueObj){
+        if (ret instanceof ContinueObj) {
             continue;
         }
 
@@ -252,16 +252,20 @@ export class ObjectStructure {
         this.properties = properties;
     }
 
-    GetDefaultValue(): Cntnr{
+    GetDefaultValue(): Cntnr {
         const attributes: Map<string, Cntnr> = new Map<string, Cntnr>();
         this.properties.forEach((v, k) => {
-            attributes.set(k, new UNDEFINED());
+            if (IsPrimitiveTypo(v)) {
+                attributes.set(k, DefaultValueNoUndefined(v));
+            } else {
+                attributes.set(k, new UNDEFINED());
+            }
         });
         return new OBJECT(attributes);
     }
 }
 
-export class ObjectsStructures{
+export class ObjectsStructures {
     public static objects: Map<string, ObjectStructure> = new Map<string, ObjectStructure>();
 }
 
@@ -275,12 +279,12 @@ export function ArrayMemorySize(ranges: Array<ArrayRange>): number {
 
 export function ArrayPosition(ranges: Array<ArrayRange>, indexes: Array<number>) {
     let ans = 0;
-    for(let i = 0; i < ranges.length; i++){
+    for (let i = 0; i < ranges.length; i++) {
         const range = ranges[i];
         let index = indexes[i];
         index = index - range.sIndex;
 
-        for(let j = i+1; j < ranges.length; j++){
+        for (let j = i + 1; j < ranges.length; j++) {
             const r = ranges[j];
             index *= (r.eIndex - r.sIndex + 1);
         }
@@ -296,22 +300,22 @@ export function ArrayPositionCode(ranges: Array<ArrayRange>, codes: Array<Code>)
     ans.appendValueToPointer("0");
 
 
-    for(let i = 0; i < ranges.length; i++){
+    for (let i = 0; i < ranges.length; i++) {
         const range = ranges[i];
         const index = codes[i];
         //index.appendResta(index.getPointer(), range.sIndex + "", "-sIndex");
         //index = index - range.sIndex;
 
-        for(var j = i+1; j < ranges.length; j++){
+        for (var j = i + 1; j < ranges.length; j++) {
             const r = ranges[j];
             //index *= (r.fIndex - r.sIndex + 1);
             const codeTmp = new Code();
             codeTmp.setPointer(Tmp.newTmp());
-            codeTmp.appendResta(r.eIndex+"", r.sIndex+"", "fIndex - sIndex");
+            codeTmp.appendResta(r.eIndex + "", r.sIndex + "", "fIndex - sIndex");
             codeTmp.appendSuma(codeTmp.getPointer(), "1", "+1");
 
             ans.append(codeTmp);
-            index.appendMulti(index.getPointer(),codeTmp.getPointer());
+            index.appendMulti(index.getPointer(), codeTmp.getPointer());
         }
         ans.append(index);
         ans.appendSuma(ans.getPointer(), index.getPointer());

@@ -47,10 +47,14 @@ export class FunctionCallNode extends Op {
             let argsIndex = 1;
 
             for (let arg of this.args) {
-                let argValue = arg.ExeCode(env);
-                argValue = GetReferenceValueCode(argValue);
-                codeAns.append(argValue);
-                argsValues.push(argValue);
+                try {
+                    let argValue = arg.ExeCode(env);
+                    argValue = GetReferenceValueCode(argValue);
+                    codeAns.append(argValue);
+                    argsValues.push(argValue);
+                }catch(e){
+                    console.log("SI ES ACA", e);
+                }
             }
 
             codeAns.appendSuma("P", positions + "");

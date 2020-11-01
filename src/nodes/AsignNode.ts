@@ -11,13 +11,15 @@ export class AsignNode extends Op {
     private readonly rt: Op;
 
     public GOCode(env: Envmnt): Code {
-        const lfVal: object = this.lf.Exe(env);
-        const rtVal: object = this.rt.Exe(env);
-        if (!(lfVal instanceof Reference)) {
-            throw new SemanticException(`No se puede asignar a ${(lfVal as Cntnr).typo}, las asignaciones solo pueden ser sobre una referencia`, this.position);
-        }
+        //const lfVal: object = this.lf.Exe(env);
+        //const rtVal: object = this.rt.Exe(env);
+
         const codeLf = this.lf.ExeCode(env);
         let codeRt = this.rt.ExeCode(env);
+
+        if (!(codeLf.getValue() instanceof Reference)) {
+            throw new SemanticException(`No se puede asignar a ${(codeLf.getValue() as Cntnr).typo}, las asignaciones solo pueden ser sobre una referencia`, this.position);
+        }
 
         codeRt = GetReferenceValueCode(codeRt);
         const codeAns = new Code(codeLf, codeRt);

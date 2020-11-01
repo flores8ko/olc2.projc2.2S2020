@@ -26,7 +26,7 @@ export class CreateObjVarNode extends Op {
         idCode = GetReferenceValueCode(idCode);
 
         let ref = idCode.getValue();
-        let e = ref.GetPropertyIndex(this.attr);
+        let e = ref.GetPropertyIndex(this.attr)[0];
         let vl = ref.GetProperty(this.attr);
 
         const codeVar = new Code(idCode);

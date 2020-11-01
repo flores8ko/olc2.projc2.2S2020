@@ -31,7 +31,7 @@ export class DeclareVarNode extends Op {
         if (this.value instanceof NULL) {
             const codeStack = new Code();
             codeStack.setPointer(Tmp.newTmp());
-            codeStack.appendStackPointerPlusValue(env.GetPropertyIndex(this.name) + "");
+            codeStack.appendStackPointerPlusValue(env.GetPropertyIndex(this.name));
 
             codeAns.append(codeStack);
             codeAns.appendAsignToStackPosition(codeStack.getPointer(), 0 + "");

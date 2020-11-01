@@ -93,9 +93,19 @@ export class Code {
     }
 
     public appendStackPointerPlusValue(
-        value: string  | number,
+        value: string  | number | any[],
         comment: string = "") {
-        this.appendLine(`${this.pointer} = P + ${value};`, comment); // pointer = P + value;
+        if(value instanceof String || value instanceof Number) {
+            this.appendLine(`${this.pointer} = P + ${value};`, comment); // pointer = P + value;
+        }else{
+            let index = (value as any[])[0];
+            let isConst = (value as any[])[1];
+            if(isConst){
+                this.appendLine(`${this.pointer} = ${index};`, comment);
+            }else{
+                this.appendLine(`${this.pointer} = P + ${index};`, comment);
+            }
+        }
         this.RemoveTmpIfItsUsed(value);
     }
 
@@ -326,7 +336,7 @@ export class Code {
                 break;
             case "NULL":
             case "UNDEFINED":
-                toStringCode.appendPrintInt(-1);
+                toStringCode.appendPrintInt(this.getPointer());
                 break;
         }
         toStringCode.appendSplitComment("END IMPRIMIENDO VALOR");

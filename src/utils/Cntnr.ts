@@ -52,10 +52,10 @@ export abstract class Cntnr {
         return propertiesTotal;
     }
 
-    public GetPropertyIndex(id: string): number{
+    public GetPropertyIndex(id: string): any []{
         id = id.toUpperCase();
         const val = this.propsOrder.indexOf(id);
-        return val !== -1 ? val + this.FatherPropertiesSize() : this.owner.GetPropertyIndex(id);
+        return val !== -1 ? [val + this.FatherPropertiesSize(), false] : this.owner.GetPropertyIndex(id);
     }
 
     public GetEnvmtOfset() {
@@ -94,7 +94,7 @@ export abstract class Cntnr {
     public Declare(id: string, cntnr: Cntnr, isFun = false): void {
         id = id.toUpperCase();
         this.props.set(id, cntnr);
-        if(!isFun) {
+        if(!isFun && this.propsOrder.indexOf(id) == -1) {
             this.propsOrder.push(id);
         }
     }
