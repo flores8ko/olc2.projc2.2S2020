@@ -53,7 +53,7 @@ export class FunctionCallNode extends Op {
                     codeAns.append(argValue);
                     argsValues.push(argValue);
                 }catch(e){
-                    console.log("SI ES ACA", e);
+                    console.log(e);
                 }
             }
 

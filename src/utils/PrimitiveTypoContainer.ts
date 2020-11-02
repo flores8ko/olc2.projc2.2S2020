@@ -66,6 +66,7 @@ export class NUMBER extends Cntnr {
 }
 
 export class UNDEFINED extends Cntnr {
+    private readonly value: any = undefined;
     constructor() {
         super();
         this.typo = "UNDEFINED";
@@ -73,6 +74,10 @@ export class UNDEFINED extends Cntnr {
 
     public toString = (): string => {
         return "undefined";
+    };
+
+    public getValue = (): any => {
+        return this.value;
     };
 }
 
