@@ -23,11 +23,13 @@ export class ReturnNode extends Op {
         codeAns.setPointer(Tmp.newTmp());
 
         let valCode = new Code();
-        valCode.setPointer(Tmp.newTmp());
+
         if(this.value !== null) {
             //val = this.value.Exe(env) as Cntnr;
             valCode = this.value.ExeCode(env);
             valCode = GetReferenceValueCode(valCode);
+        }else{
+            valCode.setPointer(Tmp.newTmp());
         }
 
         codeAns.setValue(new ReturnObj(valCode.getValue()));
