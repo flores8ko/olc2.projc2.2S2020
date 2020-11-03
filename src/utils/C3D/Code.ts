@@ -162,14 +162,14 @@ export class Code {
         value: string | number | any[],
         comment: string = "") {
         if (value instanceof String || value instanceof Number) {
-            this.appendLine(`${this.pointer} = P + ${value};`, comment); // pointer = P + value;
+            this.appendSuma("P", `${value}`, comment);
         } else {
             let index = (value as any[])[0];
             let isConst = (value as any[])[1];
             if (isConst) {
                 this.appendLine(`${this.pointer} = ${index};`, comment);
             } else {
-                this.appendLine(`${this.pointer} = P + ${index};`, comment);
+                this.appendSuma("P", `${index}`, comment);
             }
         }
         this.RemoveTmpIfItsUsed(value);
@@ -179,7 +179,7 @@ export class Code {
         value: string | number,
         comment: string = ""
     ) {
-        this.appendLine(`${this.pointer} = H + ${value}`, comment); // pointer = H + value;
+        this.appendSuma("H", `${value}`, comment);
         this.RemoveTmpIfItsUsed(value);
     }
 
