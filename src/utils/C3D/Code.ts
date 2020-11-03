@@ -61,6 +61,15 @@ export class Code {
             //this.RemoveTmpIfItsUsed(pointer1, pointer2);
             return
         }
+        if (Code.optimizado
+            && (pointer1 === "0" || pointer2 === "0")
+        ) {
+            let val = pointer1 === "0" ? pointer2 : pointer1;
+            this.appendLine(`// OPTIMIZADO POR REGLA 10 ${this.pointer} = ${pointer1} + ${pointer2};`, comment); // pointer = pointer1 + pointer2;
+            this.appendLine(`${this.pointer} = ${val};`);
+            //this.RemoveTmpIfItsUsed(pointer1, pointer2);
+            return
+        }
         this.appendLine(`${this.pointer} = ${pointer1} + ${pointer2};`, comment); // pointer = pointer1 + pointer2;
         this.RemoveTmpIfItsUsed(pointer1, pointer2);
     }
