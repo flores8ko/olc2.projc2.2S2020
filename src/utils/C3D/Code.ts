@@ -137,6 +137,14 @@ export class Code {
             //this.RemoveTmpIfItsUsed(pointer1, pointer2);
             return
         }
+        if (Code.optimizado
+            && (pointer2 === "1")
+        ) {
+            this.appendLine(`// OPTIMIZADO POR REGLA 13 ${this.pointer} = ${pointer1} / ${pointer2};`, comment); // pointer = pointer1 + pointer2;
+            this.appendLine(`${this.pointer} = ${pointer1};`);
+            //this.RemoveTmpIfItsUsed(pointer1, pointer2);
+            return
+        }
         this.appendLine(`${this.pointer} = ${pointer1} / ${pointer2};`, comment); // pointer = pointer1 / pointer2;
         this.RemoveTmpIfItsUsed(pointer1, pointer2);
     }
