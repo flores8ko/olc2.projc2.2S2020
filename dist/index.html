@@ -143,23 +143,11 @@
         editor.setFontSize(16);
 
         editor.setValue('' +
-            'type obj = {\n' +
-            '    id: number\n' +
-            '};\n' +
-            '\n' +
-            'let a: obj = {\n' +
-            '    id: 1\n' +
-            '};\n' +
-            '\n' +
-            'function poner(n: obj): void{\n' +
-            '    n = {\n' +
-            '        id: 2\n' +
-            '    };\n' +
-            '    return n;\n' +
-            '}\n' +
-            '\n' +
-            'a = poner(a);\n' +
-            'console.log(a);\n');
+            'let a = 10;\n' +
+            'console.log(a+0);\n' +
+            'console.log(a-0);\n' +
+            'console.log(a*1);\n' +
+            'console.log(a/1);');
 
 
         const scrollFactor = 500;

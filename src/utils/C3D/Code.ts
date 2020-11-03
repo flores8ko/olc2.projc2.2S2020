@@ -87,6 +87,14 @@ export class Code {
         pointer2: string,
         comment: string = ""
     ) {
+        if (Code.optimizado
+            && (this.pointer === pointer1 && pointer2 === "1")
+            || (this.pointer === pointer2 && pointer1 === "1")
+        ) {
+            this.appendLine(`// ELIMINADO POR REGLA 8 ${this.pointer} = ${pointer1} * ${pointer2};`, comment); // pointer = pointer1 + pointer2;
+            //this.RemoveTmpIfItsUsed(pointer1, pointer2);
+            return
+        }
         this.appendLine(`${this.pointer} = ${pointer1} * ${pointer2};`, comment); // pointer = pointer1 * pointer2;
         this.RemoveTmpIfItsUsed(pointer1, pointer2);
     }
@@ -96,6 +104,14 @@ export class Code {
         pointer2: string,
         comment: string = ""
     ) {
+        if (Code.optimizado
+            && (this.pointer === pointer1 && pointer2 === "1")
+            || (this.pointer === pointer2 && pointer1 === "1")
+        ) {
+            this.appendLine(`// ELIMINADO POR REGLA 9 ${this.pointer} = ${pointer1} / ${pointer2};`, comment); // pointer = pointer1 + pointer2;
+            //this.RemoveTmpIfItsUsed(pointer1, pointer2);
+            return
+        }
         this.appendLine(`${this.pointer} = ${pointer1} / ${pointer2};`, comment); // pointer = pointer1 / pointer2;
         this.RemoveTmpIfItsUsed(pointer1, pointer2);
     }
