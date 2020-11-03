@@ -199,6 +199,38 @@ export function GetC3DCode(sentences: Array<Op>): string {
     return CCode;
 }
 
+export function GetC3DCodeOptimizado(sentences: Array<Op>): string {
+    Lbl.resetCount();
+    Tmp.resetCount();
+    const tmps = Tmp.getCount();
+    let CCode = "";
+
+    const env = new Envmnt(null, sentences);
+    Code.optimizado = true;
+    const codeFunctions = env.GO_ALL_CODE_FUN();
+    const code = env.GO_ALL_CODE();
+    Code.optimizado = false;
+
+    CCode += "#include <stdio.h> //Importar para el uso de Printf\n" +
+        "double HEAP[99999999]; //Estructura para heap \n" +
+        "double STACK[99999999]; //Estructura para stack \n" +
+        "double P; //Puntero P \n" +
+        "double H; //Puntero H \n" +
+        "double ";
+    for (let i = 0; i <= Tmp.getCount(); i++) {
+        CCode += `t${i}`;
+        CCode += i == Tmp.getCount() ? ";\n\n" : ",";
+    }
+
+    CCode += codeFunctions.getText();
+
+    CCode += "\n\nvoid main(){\n";
+    CCode += code.getText();
+    CCode += "\nreturn;\n" +
+        "}";
+    return CCode;
+}
+
 export function GraphAST(sentences: Array<Op>): string {
     let graph =
         'digraph G {\n' +

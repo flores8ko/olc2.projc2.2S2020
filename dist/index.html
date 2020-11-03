@@ -67,10 +67,20 @@
             <div style="padding-top: 7vh" id="C3D-header" class="input-field col s12">
                 <h4 style="background-color: #2BBBAD; color: white; padding-top: 0.3em; padding-bottom: 0.3em">
                     C3D</h4>
+                <div class="row">
+                    <h5 style="color: white" class="col m6 l6 s12">Sin Optimizar</h5>
+                    <h5 style="color: white" class="col m6 l6 s12">Optimizado</h5>
                 <textarea disabled
-                          style="height: 65vh; background-color: #2E3440; color: #FFF; font-family: casadia; white-space: pre-wrap;"
+                          style="height: 59vh; background-color: #2E3440; color: #FFF; font-family: casadia; white-space: pre-wrap;"
+                          class="col m6 l6 s12"
                           rows="10"
                           id="c3d"></textarea>
+                <textarea disabled
+                          style="height: 59vh; background-color: #2E3440; color: #FFF; font-family: casadia; white-space: pre-wrap; width: 50%"
+                          class="col m6 l6 s12"
+                          rows="10"
+                          id="c3d-optimizado"></textarea>
+                </div>
                 <p style="color: white"><b>NOTE</b>: For execute this Code go to this <a
                         href="./graph.html">LINK</a>, and CTRL+V on the text editor.</p>
             </div>
@@ -222,6 +232,8 @@
 
             let c = $('#c3d');
             c.text('');
+            let c2 = $('#c3d-optimizado');
+            c2.text('');
             let TXT = ast.TranslateStringsCompose(editor.getValue());
             $('#translated').val(TXT);
             ast.ErrorsControl.clearStructures();
@@ -246,6 +258,9 @@
             }
             const c3d = ast.GetC3DCode(sentences);
             c.html(c3d);
+
+            const c3d2 = ast.GetC3DCodeOptimizado(sentences);
+            c2.html(c3d2);
             let errors = ast.ErrorsControl.GetErrors();
             if (errors.length > 0) {
                 setErrors();

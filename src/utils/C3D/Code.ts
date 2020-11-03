@@ -6,6 +6,7 @@ export class Code {
     private readonly lines: Array<string> = new Array<string>();
     private readonly asmLines: Array<string> = new Array<string>();
     private readonly asmProcLines: Array<string> = new Array<string>();
+    public static optimizado = false;
     public isProc: boolean = false;
     public isHeap: boolean;
     private value: Cntnr;
@@ -18,7 +19,7 @@ export class Code {
     }
 
     private RemoveTmpIfItsUsed(...tmps: any[]) {
-        for(let tmp of tmps) {
+        for (let tmp of tmps) {
             if (!`${tmp}`.startsWith("t")) {
                 return;
             }
@@ -33,7 +34,7 @@ export class Code {
 
     public appendSplitComment(comment: string) {
         this.lines.push(
-            `${comment.toUpperCase().includes("START ")?'\n':''}// --------------------- ${comment.toUpperCase()} ---------------------${comment.toUpperCase().includes("END ")? '\n' : ''}`);
+            `${comment.toUpperCase().includes("START ") ? '\n' : ''}// --------------------- ${comment.toUpperCase()} ---------------------${comment.toUpperCase().includes("END ") ? '\n' : ''}`);
     }
 
     public appendLabel(label: string, comment: string = "") {
@@ -52,6 +53,14 @@ export class Code {
         pointer2: string,
         comment: string = ""
     ) {
+        if (Code.optimizado
+            && (this.pointer === pointer1 && pointer2 === "0")
+            || (this.pointer === pointer2 && pointer1 === "0")
+        ) {
+            this.appendLine(`// ELIMINADO POR REGLA 6 ${this.pointer} = ${pointer1} + ${pointer2};`, comment); // pointer = pointer1 + pointer2;
+            //this.RemoveTmpIfItsUsed(pointer1, pointer2);
+            return
+        }
         this.appendLine(`${this.pointer} = ${pointer1} + ${pointer2};`, comment); // pointer = pointer1 + pointer2;
         this.RemoveTmpIfItsUsed(pointer1, pointer2);
     }
@@ -61,6 +70,14 @@ export class Code {
         pointer2: string,
         comment: string = ""
     ) {
+        if (Code.optimizado
+            && (this.pointer === pointer1 && pointer2 === "0")
+            || (this.pointer === pointer2 && pointer1 === "0")
+        ) {
+            this.appendLine(`// ELIMINADO POR REGLA 7 ${this.pointer} = ${pointer1} - ${pointer2};`, comment); // pointer = pointer1 + pointer2;
+            //this.RemoveTmpIfItsUsed(pointer1, pointer2);
+            return
+        }
         this.appendLine(`${this.pointer} = ${pointer1} - ${pointer2};`, comment); // pointer = pointer1 - pointer2;
         this.RemoveTmpIfItsUsed(pointer1, pointer2);
     }
@@ -93,16 +110,16 @@ export class Code {
     }
 
     public appendStackPointerPlusValue(
-        value: string  | number | any[],
+        value: string | number | any[],
         comment: string = "") {
-        if(value instanceof String || value instanceof Number) {
+        if (value instanceof String || value instanceof Number) {
             this.appendLine(`${this.pointer} = P + ${value};`, comment); // pointer = P + value;
-        }else{
+        } else {
             let index = (value as any[])[0];
             let isConst = (value as any[])[1];
-            if(isConst){
+            if (isConst) {
                 this.appendLine(`${this.pointer} = ${index};`, comment);
-            }else{
+            } else {
                 this.appendLine(`${this.pointer} = P + ${index};`, comment);
             }
         }
@@ -110,7 +127,7 @@ export class Code {
     }
 
     public appendHeapPointerPlusValue(
-        value: string  | number,
+        value: string | number,
         comment: string = ""
     ) {
         this.appendLine(`${this.pointer} = H + ${value}`, comment); // pointer = H + value;
@@ -186,7 +203,7 @@ export class Code {
 
     public appendAsignToStackPosition(
         position: string,
-        value: string  | number,
+        value: string | number,
         comment: string = ""
     ) {
         this.appendLine(`STACK[(int)${position}] = ${value};`, comment); // STACK [position] = value;
@@ -364,7 +381,7 @@ export class Code {
     public setValue = (value: Cntnr) => this.value = value;
 
     public getPointer = () => this.pointer;
-    public setPointer = (pointer: string | number) => this.pointer = pointer+"";
+    public setPointer = (pointer: string | number) => this.pointer = pointer + "";
 
     public getText = () => this.lines.join('\n').trim();
     public getASMText = () => this.asmLines.join('\n').trim();
