@@ -8,6 +8,7 @@ import {ReturnObj} from "./ReturnObj";
 import {GraphvizNode} from "../utils/GraphvizNode";
 import { Code } from "../utils/C3D/Code";
 import {Tmp} from "../utils/C3D/Tmp";
+import {Native} from "../utils/functions/Native";
 
 export class CreateObjVarNode extends Op {
     private readonly id: Op;
@@ -20,14 +21,19 @@ export class CreateObjVarNode extends Op {
     }
 
     public GOCode(env: Envmnt): Code {
+        //TODO NATIVE CALL
         const codeAns = new Code();
         codeAns.setPointer(Tmp.newTmp());
         let idCode = this.id.ExeCode(env);
         idCode = GetReferenceValueCode(idCode);
 
         let ref = idCode.getValue();
-        let e = ref.GetPropertyIndex(this.attr)[0];
         let vl = ref.GetProperty(this.attr);
+        if (vl instanceof Native) {
+            console.log(idCode);
+            return vl.GetC3DCode(env, "", idCode);
+        }
+        let e = ref.GetPropertyIndex(this.attr)[0];
 
         const codeVar = new Code(idCode);
         codeVar.setPointer(Tmp.newTmp());

@@ -9,6 +9,7 @@ import { Code } from "../utils/C3D/Code";
 
 export class CreateObjFunNode extends Op {
     public GOCode(env: Envmnt): Code {
+        //TODO NATIVE CALL
         throw new Error("Method not implemented.");
     }
     private readonly object: Op;

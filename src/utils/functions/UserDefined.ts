@@ -43,7 +43,7 @@ export class UserDefined extends FunctionRepresent {
         return env.GO_ALL();
     }
 
-    public GetC3DCode(env: Envmnt, name: string) : Code{
+    public GetC3DCode(env: Envmnt, name: string, code:Code = null) : Code{
         const codeAns = new Code();
         const exitLbl = Lbl.newLbl();
         const funEnv = new Envmnt(env, this.src, "", "", exitLbl, `$${name.toUpperCase()}`);

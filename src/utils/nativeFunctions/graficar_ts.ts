@@ -4,8 +4,13 @@ import {Cntnr} from "../Cntnr";
 import {TSGraph2} from "../Utils";
 import {UNDEFINED} from "../PrimitiveTypoContainer";
 import {TSGraphControl} from "../TSGraphControl";
+import { Code } from "../C3D/Code";
 
-export class Graficar_ts extends Native{
+export class Graficar_ts extends Native {
+    public GetC3DCode(env0: Envmnt, name: string, code: Code = null): Code {
+        throw new Error("Method not implemented.");
+    }
+
     constructor() {
         super();
     }

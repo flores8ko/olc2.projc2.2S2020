@@ -6,6 +6,7 @@ import {Pop} from "./nativeFunctions/pop";
 import {ArrayRange} from "./C3D/ArrayRange";
 import {Code} from "./C3D/Code";
 import {ArrayMemorySize, ArrayPosition, ArrayPositionCode} from "./Utils";
+import {Stringlenght} from "./nativeFunctions/stringlenght";
 
 export class BOOLEAN extends Cntnr {
     private readonly value: boolean;
@@ -36,6 +37,11 @@ export class STRING extends Cntnr {
         super();
         this.value = value || '';
         this.typo = "STRING";
+        try{
+            this.Declare("length", new Stringlenght(this));
+        }catch (e) {
+            throw new Error();
+        }
     }
 
     public toString = (): string => {
