@@ -1,14 +1,13 @@
 import {Op} from "../utils/Op";
 import {Envmnt} from "../utils/Envmnt";
-import {LogicWhile} from "../utils/Utils";
+import {GetReferenceValueCode, LogicWhile, SemanticException} from "../utils/Utils";
 import {GraphvizNode} from "../utils/GraphvizNode";
 import {TSGraphControl} from "../utils/TSGraphControl";
 import { Code } from "../utils/C3D/Code";
+import {BOOLEAN} from "../utils/PrimitiveTypoContainer";
+import {Lbl} from "../utils/C3D/Lbl";
 
 export class ForNode extends Op {
-    public GOCode(env: Envmnt): Code {
-        throw new Error("Method not implemented.");
-    }
     private readonly condition0: Op;
     private readonly condition1: Op;
     private readonly condition2: Op;
@@ -21,6 +20,34 @@ export class ForNode extends Op {
         this.condition2 = condition2;
         this.sentences = sentences;
     }
+
+    public GOCode(env: Envmnt): Code {
+        const dec = GetReferenceValueCode(this.condition0.ExeCode(env));
+
+        const cond = GetReferenceValueCode(this.condition1.ExeCode(env));
+        if(!(cond.getValue() instanceof BOOLEAN))
+            throw new SemanticException("condicion utilizada como parametro no soportada por sentencia while");
+
+        const startLbl = Lbl.newLbl(); //while start lbl
+        const endLbl = Lbl.newLbl(); // while end lbl
+        const codeWhile = new Code();
+        codeWhile.append(dec);
+        codeWhile.appendSplitComment("FOR START");
+        codeWhile.appendLabel(startLbl);
+        codeWhile.append(cond);
+        codeWhile.appendJE(cond.getPointer(), "0", endLbl);
+
+        const envWhile = new Envmnt(env, this.sentences.concat(this.condition2), startLbl, endLbl);
+        //Utils.PassPropsAndFuncs(env, envWhile);
+        const whileCode = envWhile.GO_ALL_CODE();
+        codeWhile.append(whileCode);
+        codeWhile.appendJMP(startLbl);
+        codeWhile.appendLabel(endLbl);
+        codeWhile.appendSplitComment("FOR END");
+
+        return codeWhile;
+    }
+
 
     GO(env: Envmnt): object {
         const conditionEnv = new Envmnt(env, [this.condition0]);
