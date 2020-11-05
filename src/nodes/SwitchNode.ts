@@ -26,6 +26,7 @@ export class SwitchNode extends Op {
     public GOCode(env: Envmnt): Code {
         const cond = GetReferenceValueCode(this.condition.ExeCode(env));
         const codeAns = new Code(cond);
+        let endLbl = Lbl.newLbl();
 
         let defaultCount = 0;
         for (let Case of this.cases) {
@@ -46,13 +47,14 @@ export class SwitchNode extends Op {
                 endCase =  Lbl.newLbl();
                 codeAns.appendJNE(cond.getPointer(), condValue.getPointer(), endCase, "salto de caso si no son iguales");
             }
-            const envCase = new Envmnt(env, Case.getSentences());
+            const envCase = new Envmnt(env, Case.getSentences(), "", endLbl, "");
             const codeCase = envCase.GO_ALL_CODE();
             codeAns.append(codeCase);
             if(Case.getConditionValue() !== null) {
                 codeAns.appendLabel(endCase, "fin de caso");
             }
         }
+        codeAns.appendLabel(endLbl, "fin de switch");
         return codeAns;
     }
 
