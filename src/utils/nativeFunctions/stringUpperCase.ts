@@ -59,6 +59,7 @@ export class StringUperCase extends Native {
         codeCicle.append(char);
         codeCicle.appendJMP(startLbl);
         codeCicle.appendLabel(endLbl);
+        codeCicle.appendLine(`H = H + ${str1Code.getPointer()};`);
 
         codeAns.append(codeCicle);
         codeAns.setValue(this.str);
