@@ -7,6 +7,7 @@ import {ArrayRange} from "./C3D/ArrayRange";
 import {Code} from "./C3D/Code";
 import {ArrayMemorySize, ArrayPosition, ArrayPositionCode} from "./Utils";
 import {Stringlenght} from "./nativeFunctions/stringlenght";
+import {StringUperCase} from "./nativeFunctions/stringUpperCase";
 
 export class BOOLEAN extends Cntnr {
     private readonly value: boolean;
@@ -39,6 +40,7 @@ export class STRING extends Cntnr {
         this.typo = "STRING";
         try{
             this.Declare("length", new Stringlenght(this));
+            this.Declare("touppercase", new StringUperCase(this));
         }catch (e) {
             throw new Error();
         }

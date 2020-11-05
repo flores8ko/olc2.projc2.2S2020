@@ -6,11 +6,25 @@ import {FunctionRepresent} from "../utils/functions/FunctionRepresent";
 import {ReturnObj} from "./ReturnObj";
 import {GraphvizNode} from "../utils/GraphvizNode";
 import { Code } from "../utils/C3D/Code";
+import {Native} from "../utils/functions/Native";
+import {GetReferenceValueCode} from "../utils/Utils";
 
 export class CreateObjFunNode extends Op {
     public GOCode(env: Envmnt): Code {
-        //TODO NATIVE CALL
-        throw new Error("Method not implemented.");
+        let idCode = this.object.ExeCode(env);
+        idCode = GetReferenceValueCode(idCode);
+
+        let ref = idCode.getValue();
+
+        let vl = (ref as Cntnr).GetProperty(this.funId);
+        if (!(vl instanceof FunctionRepresent)) {
+            throw new Error(`No existe la funcion ${this.funId}`);
+        }
+
+        if (vl instanceof Native) {
+            return vl.GetC3DCode(env, "", idCode);
+        }
+
     }
     private readonly object: Op;
     private readonly funId: string;
