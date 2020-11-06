@@ -14,7 +14,8 @@ export class StringLowrCase extends Native {
         return new ReturnObj(new STRING(base.toLocaleLowerCase()));
     }
 
-    GetC3DCode(env0: Envmnt, name: string, code: Code): Code {
+    GetC3DCode(env0: Envmnt, name: string, ...codes: Code[]): Code {
+        let code = codes[0];
         code = GetReferenceValueCode(code);
         const codeAns = new Code(code);
         codeAns.setPointer(Tmp.newTmp());
@@ -59,6 +60,7 @@ export class StringLowrCase extends Native {
         codeCicle.append(char);
         codeCicle.appendJMP(startLbl);
         codeCicle.appendLabel(endLbl);
+        codeCicle.appendLine(`H = H + 1;`);
         codeCicle.appendLine(`H = H + ${str1Code.getPointer()};`);
 
         codeAns.append(codeCicle);

@@ -8,7 +8,8 @@ import {Tmp} from "../C3D/Tmp";
 import {GetReferenceValueCode} from "../Utils";
 
 export class Stringlenght extends Native {
-    public GetC3DCode(env0: Envmnt, name: string, code: Code = null): Code {
+    public GetC3DCode(env0: Envmnt, name: string, ...codes: Code []): Code {
+        let code = codes[0];
         code = GetReferenceValueCode(code);
         const codeAns = new Code(code);
         codeAns.setPointer(Tmp.newTmp());

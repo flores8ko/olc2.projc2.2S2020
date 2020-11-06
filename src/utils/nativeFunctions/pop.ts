@@ -6,7 +6,7 @@ import {ReturnObj} from "../../nodes/ReturnObj";
 import { Code } from "../C3D/Code";
 
 export class Pop extends Native {
-    public GetC3DCode(env0: Envmnt, name: string, code: Code = null): Code {
+    public GetC3DCode(env0: Envmnt, name: string, ...code: Code[]): Code {
         throw new Error("Method not implemented.");
     }
     private readonly array: ARRAY;

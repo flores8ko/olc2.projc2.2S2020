@@ -21,8 +21,15 @@ export class CreateObjFunNode extends Op {
             throw new Error(`No existe la funcion ${this.funId}`);
         }
 
+        const codes = new Array<Code>();
+        for (let arg of this.args) {
+            let argValue = arg.ExeCode(env);
+            argValue = GetReferenceValueCode(argValue);
+            codes.push(argValue);
+        }
+
         if (vl instanceof Native) {
-            return vl.GetC3DCode(env, "", idCode);
+            return vl.GetC3DCode(env, "", idCode, ...codes);
         }
 
     }

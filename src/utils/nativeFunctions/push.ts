@@ -8,7 +8,7 @@ import {SemanticException} from "../Utils";
 import { Code } from "../C3D/Code";
 
 export class Push extends Native {
-    public GetC3DCode(env0: Envmnt, name: string, code: Code = null): Code {
+    public GetC3DCode(env0: Envmnt, name: string, ...code: Code[]): Code {
         throw new Error("Method not implemented.");
     }
     private readonly array: ARRAY;

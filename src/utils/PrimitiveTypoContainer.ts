@@ -9,6 +9,7 @@ import {ArrayMemorySize, ArrayPosition, ArrayPositionCode} from "./Utils";
 import {Stringlenght} from "./nativeFunctions/stringlenght";
 import {StringUperCase} from "./nativeFunctions/stringUpperCase";
 import {StringLowrCase} from "./nativeFunctions/stringLowerCase";
+import {Charat} from "./nativeFunctions/charat";
 
 export class BOOLEAN extends Cntnr {
     private readonly value: boolean;
@@ -43,6 +44,7 @@ export class STRING extends Cntnr {
             this.Declare("length", new Stringlenght(this));
             this.Declare("touppercase", new StringUperCase(this));
             this.Declare("tolowercase", new StringLowrCase(this));
+            this.Declare("charat", new Charat(this));
         }catch (e) {
             throw new Error();
         }
