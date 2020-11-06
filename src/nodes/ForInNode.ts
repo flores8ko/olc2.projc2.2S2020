@@ -2,14 +2,74 @@ import {Op} from "../utils/Op";
 import {Envmnt} from "../utils/Envmnt";
 import {Reference} from "../utils/Reference";
 import {ARRAY, NUMBER, STRING} from "../utils/PrimitiveTypoContainer";
-import {FindVar, SemanticException} from "../utils/Utils";
+import {FindVar, GetReferenceValueCode, SemanticException} from "../utils/Utils";
 import {GraphvizNode} from "../utils/GraphvizNode";
 import {TSGraphControl} from "../utils/TSGraphControl";
 import { Code } from "../utils/C3D/Code";
+import {Lbl} from "../utils/C3D/Lbl";
+import {Tmp} from "../utils/C3D/Tmp";
 
 export class ForInNode extends Op {
     public GOCode(env: Envmnt): Code {
-        throw new Error("Method not implemented.");
+        const codeAns = new Code();
+        codeAns.appendSplitComment("START FOR OF");
+        let arrayCode = this.array.ExeCode(env);
+        arrayCode = GetReferenceValueCode(arrayCode);
+        const val = arrayCode.getValue();
+
+
+        if (!(val instanceof ARRAY)) {
+            throw new SemanticException("Se esperaba una referncia a un arreglo en ciclo For Of", this.position)
+        }
+
+        const t = val.getValueList()[0];
+        let valType = t ? (t as Reference).getValue().typo : undefined;
+        valType = valType ? valType : val.getContentType();
+
+        const env0 = new Envmnt(env, this.sentences);
+        if (this.newControlVar) {
+            env0.AddProperty(this.controlVar, new Reference("NUMBER", false, true));
+        }
+
+        codeAns.appendSplitComment("array type: " + valType);
+
+        codeAns.append(arrayCode);
+
+        let startLbl = Lbl.newLbl();
+        let endLbl = Lbl.newLbl();
+
+        let controlTmp = new Code();
+        controlTmp.setPointer(Tmp.newTmp());
+        controlTmp.appendValueToPointer(0, "puntero de ciclo");
+
+
+        codeAns.append(controlTmp);
+
+        const controlVarCode = new Code();
+        controlVarCode.appendSplitComment(`start obtiene variable: ${this.controlVar}`);
+        controlVarCode.setValue(FindVar(env0, this.controlVar));
+        controlVarCode.setPointer(Tmp.newTmp());
+        controlVarCode.appendStackPointerPlusValue(env0.GetPropertyIndex(this.controlVar), "obtiene " + this.controlVar);
+        controlVarCode.appendSplitComment(`end obtiene variable: ${this.controlVar}`);
+
+        codeAns.append(controlVarCode);
+
+
+        codeAns.appendLabel(startLbl);
+        codeAns.appendJGE(controlTmp.getPointer(), val.getValueList().length+"", endLbl,"condicion tamañ de arreglo");
+
+
+
+        codeAns.appendAsignToStackPosition(controlVarCode.getPointer(), controlTmp.getPointer(), "asigna indice a variable de control")
+
+        codeAns.append(env0.GO_ALL_CODE());
+
+        codeAns.appendLine(`${controlTmp.getPointer()} = ${controlTmp.getPointer()} + 1;`, "aumenta variable de control");
+        codeAns.appendJMP(startLbl, "retorna a inicio");
+        codeAns.appendLabel(endLbl);
+
+        codeAns.appendSplitComment("END FOR OF");
+        return codeAns;
     }
     private readonly controlVar: string;
     private readonly newControlVar: boolean;
