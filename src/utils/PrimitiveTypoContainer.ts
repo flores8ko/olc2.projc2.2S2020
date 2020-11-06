@@ -154,6 +154,8 @@ export class ARRAY extends Cntnr {
         }
     }
 
+    public getContentType = (): string => this.contentType;
+
     public toString = (): string => {
         const size = this.value.length;
         let log = `Array (${size}) [`;
