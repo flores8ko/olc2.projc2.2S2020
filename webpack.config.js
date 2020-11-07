@@ -63,5 +63,5 @@ const nodesConfig = Object.assign({}, config,{
 
 // Return Array of Configurations
 module.exports = [
-    jisonConfig, nodesConfig,
+    /*jisonConfig,*/ nodesConfig,
 ];
