@@ -427,8 +427,7 @@ export class Code {
 
                 toStringCode.append(controlCode);
                 break;
-            case "NULL":
-            case "UNDEFINED":
+            default:
                 toStringCode.appendPrintInt(this.getPointer());
                 break;
         }

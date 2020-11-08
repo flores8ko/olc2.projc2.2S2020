@@ -28,7 +28,8 @@ export class ForOfNode extends Op {
 
         const env0 = new Envmnt(env, this.sentences);
         if (this.newControlVar) {
-            env0.AddProperty(this.controlVar, new Reference(valType, false, true));
+            // env0.AddProperty(this.controlVar, new Reference(valType, false, true));
+            env0.AddProperty(this.controlVar, t ? t : new Reference(valType, false, true));
         }
 
         codeAns.appendSplitComment("array type: " + valType);
