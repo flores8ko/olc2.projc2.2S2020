@@ -66,6 +66,7 @@ import {ErrorsControl} from "./utils/ErrorsControl";
 import {Lbl} from "./utils/C3D/Lbl";
 import {Tmp} from "./utils/C3D/Tmp";
 import {Code} from "./utils/C3D/Code";
+import {OptimizationRecords} from "./utils/OptimizationRecords";
 
 export {
     Console,
@@ -158,6 +159,7 @@ export function ExecuteAST(sentences: Array<Op>) {
     Console.log = '';
     NodesControl.clearStructures();
     TSGraphControl.clearStructures();
+    OptimizationRecords.clearRecords();
     ObjectsStructures.objects = new Map<string, ObjectStructure>();
     const env = new Envmnt(null, sentences);
     env.GO_ALL();
