@@ -5,6 +5,7 @@ import {SemanticException} from "../Utils";
 import {ReturnObj} from "../../nodes/ReturnObj";
 import {Envmnt} from "../Envmnt";
 import {Cntnr} from "../Cntnr";
+import { SumNode } from "../../nodes/SumNode";
 
 export class Concat extends Native{
     EXE(env0: Envmnt, args: Array<Cntnr>): Cntnr {
@@ -20,9 +21,9 @@ export class Concat extends Native{
     }
 
     GetC3DCode(env0: Envmnt, name: string, ...code: Code[]): Code {
-        const codeAns = new Code();
-        codeAns.setValue(new STRING());
-        return codeAns;
+        let codeLf = code[0];
+        let codeRt = code[1];
+        return SumNode.SumConcat(codeLf, codeRt);
     }
 
     private readonly str: STRING;

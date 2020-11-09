@@ -27,6 +27,7 @@ export class CreateObjFunNode extends Op {
             argValue = GetReferenceValueCode(argValue);
             codes.push(argValue);
         }
+        codes.push(idCode);
 
         if (vl instanceof Native) {
             return vl.GetC3DCode(env, "", idCode, ...codes);

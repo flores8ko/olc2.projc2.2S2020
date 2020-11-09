@@ -23,9 +23,25 @@ export class SumNode extends Op {
         let codeLf = GetReferenceValueCode(this.lf.ExeCode(env));
         let codeRt = GetReferenceValueCode(this.rt.ExeCode(env));
 
+        return SumNode.SumConcat(codeLf, codeRt);
+    }
+
+    GO(env: Envmnt): object {
+        return Suma((this.lf.Exe(env) as Cntnr), (this.rt.Exe(env) as Cntnr), this.position);
+    }
+
+    GetGraph(env: Envmnt): GraphvizNode {
+        return new GraphvizNode('SUM', [this.lf.GetGraph(env), this.rt.GetGraph(env)]);
+    }
+
+    GetTSGraph(): string {
+        return "";
+    }
+
+    public static SumConcat(codeLf: Code, codeRt: Code): Code{
         const codeAns = new Code(codeLf, codeRt);
         codeAns.setPointer(Tmp.newTmp());
-        let value = Suma(codeLf.getValue(), codeRt.getValue(), this.position);
+        let value = Suma(codeLf.getValue(), codeRt.getValue());
         if (value instanceof STRING) {
 
             if (!(codeLf.getValue() instanceof STRING)) {
@@ -141,19 +157,7 @@ export class SumNode extends Op {
         return codeAns;
     }
 
-    GO(env: Envmnt): object {
-        return Suma((this.lf.Exe(env) as Cntnr), (this.rt.Exe(env) as Cntnr), this.position);
-    }
-
-    GetGraph(env: Envmnt): GraphvizNode {
-        return new GraphvizNode('SUM', [this.lf.GetGraph(env), this.rt.GetGraph(env)]);
-    }
-
-    GetTSGraph(): string {
-        return "";
-    }
-
-    private valToString(codeValue: Code): Code{
+    private static valToString(codeValue: Code): Code{
         let codeToString = new Code();
         codeToString.appendSplitComment("start pasando a string");
 
