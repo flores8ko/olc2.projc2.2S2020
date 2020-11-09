@@ -176,6 +176,8 @@ export function GetC3DCode(sentences: Array<Op>): string {
     let CCode = "";
 
     const env = new Envmnt(null, sentences);
+    const codeTypes = env.GO_ALL_TYPES();
+    const codeGlobVars = env.GO_ALL_GLOBAL_VAR(null);
     const codeFunctions = env.GO_ALL_CODE_FUN();
     const code = env.GO_ALL_CODE();
 
@@ -190,9 +192,15 @@ export function GetC3DCode(sentences: Array<Op>): string {
         CCode += i == Tmp.getCount() ? ";\n\n" : ",";
     }
 
+    CCode += codeTypes.getText();
+    CCode += "\n";
+
+
     CCode += codeFunctions.getText();
 
     CCode += "\n\nvoid main(){\n";
+    CCode += codeGlobVars.getText();
+    CCode += "\n";
     CCode += code.getText();
     CCode += "\nreturn;\n" +
         "}";
@@ -207,6 +215,8 @@ export function GetC3DCodeOptimizado(sentences: Array<Op>): string {
 
     const env = new Envmnt(null, sentences);
     Code.optimizado = true;
+    const codeTypes = env.GO_ALL_TYPES();
+    const codeGlobVars = env.GO_ALL_GLOBAL_VAR(null);
     const codeFunctions = env.GO_ALL_CODE_FUN();
     const code = env.GO_ALL_CODE();
     Code.optimizado = false;
@@ -222,9 +232,15 @@ export function GetC3DCodeOptimizado(sentences: Array<Op>): string {
         CCode += i == Tmp.getCount() ? ";\n\n" : ",";
     }
 
+    CCode += codeTypes.getText();
+    CCode += "\n";
+
+
     CCode += codeFunctions.getText();
 
     CCode += "\n\nvoid main(){\n";
+    CCode += codeGlobVars.getText();
+    CCode += "\n";
     CCode += code.getText();
     CCode += "\nreturn;\n" +
         "}";

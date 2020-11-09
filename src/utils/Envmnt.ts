@@ -8,6 +8,7 @@ import {DeclareTypeStructureNode} from "../nodes/DeclareTypeStructureNode";
 import {GraphvizNode} from "./GraphvizNode";
 import {Graficar_ts} from "./nativeFunctions/graficar_ts";
 import {Code} from "./C3D/Code";
+import {DeclareVarListNode} from "../nodes/DeclareVarListNode";
 
 export class Envmnt extends Cntnr {
     public readonly Extra = new Map<string, any>();
@@ -60,10 +61,40 @@ export class Envmnt extends Cntnr {
         return this.operations;
     }
 
+    public GO_ALL_TYPES(env: Envmnt = null): Code {
+        const codeAns = new Code();
+        for (let op of this.operations) {
+            if (op instanceof DeclareTypeStructureNode) {
+                try {
+                    const result = op.ExeCode(env ? env : this);
+                    codeAns.append(result);
+                } catch (e) {
+                    console.log(e.message)
+                }
+            }
+        }
+        return codeAns;
+    }
+
+    public GO_ALL_GLOBAL_VAR(env: Envmnt = null): Code {
+        const codeAns = new Code();
+        for (let op of this.operations) {
+            if (op instanceof DeclareVarListNode && env === null) {
+                try {
+                    const result = op.ExeCode(env ? env : this);
+                    codeAns.append(result);
+                } catch (e) {
+                    console.log(e.message)
+                }
+            }
+        }
+        return codeAns;
+    }
+
     public GO_ALL_CODE_FUN(env: Envmnt = null): Code {
         const codeFunctions = new Code();
         for (let op of this.operations) {
-            if (op instanceof DeclareFunNode || op instanceof DeclareTypeStructureNode) {
+            if (op instanceof DeclareFunNode) {
                 try {
                     const result = op.ExeCode(env ? env : this);
                     codeFunctions.append(result);

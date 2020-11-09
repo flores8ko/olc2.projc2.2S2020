@@ -46,7 +46,12 @@ export abstract class Cntnr {
         let propertiesTotal = 0;
         let ownerCntnr = this.owner;
         while (ownerCntnr != null) {
-            propertiesTotal += ownerCntnr.propsOrder.length;
+            if (this.returnVarRefName !== "" && ownerCntnr.GetOwner() !== null) {
+                propertiesTotal += ownerCntnr.propsOrder.length;
+            }
+            else if(this.returnVarRefName === ""){
+                propertiesTotal += ownerCntnr.propsOrder.length;
+            }
             ownerCntnr = ownerCntnr.GetOwner();
         }
         return propertiesTotal;
@@ -55,7 +60,7 @@ export abstract class Cntnr {
     public GetPropertyIndex(id: string): any []{
         id = id.toUpperCase();
         const val = this.propsOrder.indexOf(id);
-        return val !== -1 ? [val + this.FatherPropertiesSize(), false] : this.owner.GetPropertyIndex(id);
+        return val !== -1 ? [val + this.FatherPropertiesSize(), this.owner === null] : this.owner.GetPropertyIndex(id);
     }
 
     public GetEnvmtOfset() {
