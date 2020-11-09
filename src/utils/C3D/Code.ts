@@ -1,6 +1,7 @@
 import {Cntnr} from "../Cntnr";
 import {Tmp} from "./Tmp";
 import {Lbl} from "./Lbl";
+import {OptimizationRecords} from "../OptimizationRecords";
 
 export class Code {
     private readonly lines: Array<string> = new Array<string>();
@@ -58,6 +59,11 @@ export class Code {
             || (this.pointer === pointer2 && pointer1 === "0")
         ) {
             this.appendLine(`// ELIMINADO POR REGLA 6 ${this.pointer} = ${pointer1} + ${pointer2};`, comment); // pointer = pointer1 + pointer2;
+            OptimizationRecords.AddRecord(
+                `${this.pointer} = ${pointer1} + ${pointer2};`,
+                'DELETED',
+                6
+            );
             //this.RemoveTmpIfItsUsed(pointer1, pointer2);
             return
         }
@@ -67,6 +73,11 @@ export class Code {
             let val = pointer1 === "0" ? pointer2 : pointer1;
             this.appendLine(`// OPTIMIZADO POR REGLA 10 ${this.pointer} = ${pointer1} + ${pointer2};`, comment); // pointer = pointer1 + pointer2;
             this.appendLine(`${this.pointer} = ${val};`);
+            OptimizationRecords.AddRecord(
+                `${this.pointer} = ${pointer1} + ${pointer2};`,
+                `${this.pointer} = ${val};`,
+                10
+            );
             //this.RemoveTmpIfItsUsed(pointer1, pointer2);
             return
         }
@@ -85,6 +96,11 @@ export class Code {
         ) {
             this.appendLine(`// ELIMINADO POR REGLA 7 ${this.pointer} = ${pointer1} - ${pointer2};`, comment); // pointer = pointer1 + pointer2;
             //this.RemoveTmpIfItsUsed(pointer1, pointer2);
+            OptimizationRecords.AddRecord(
+                `${this.pointer} = ${pointer1} - ${pointer2};`,
+                'DELETED',
+                7
+            );
             return
         }
         if (Code.optimizado
@@ -92,6 +108,11 @@ export class Code {
         ) {
             this.appendLine(`// OPTIMIZADO POR REGLA 11 ${this.pointer} = ${pointer1} - ${pointer2};`, comment); // pointer = pointer1 + pointer2;
             this.appendLine(`${this.pointer} = ${pointer1};`);
+            OptimizationRecords.AddRecord(
+                `${this.pointer} = ${pointer1} - ${pointer2};`,
+                `${this.pointer} = ${pointer1};`,
+                11
+            );
             //this.RemoveTmpIfItsUsed(pointer1, pointer2);
             return
         }
@@ -109,6 +130,11 @@ export class Code {
             || (this.pointer === pointer2 && pointer1 === "1")
         ) {
             this.appendLine(`// ELIMINADO POR REGLA 8 ${this.pointer} = ${pointer1} * ${pointer2};`, comment); // pointer = pointer1 + pointer2;
+            OptimizationRecords.AddRecord(
+                `${this.pointer} = ${pointer1} * ${pointer2};`,
+                'DELETED',
+                8
+            );
             //this.RemoveTmpIfItsUsed(pointer1, pointer2);
             return
         }
@@ -118,6 +144,11 @@ export class Code {
             let val = pointer1 === "1" ? pointer2 : pointer1;
             this.appendLine(`// OPTIMIZADO POR REGLA 12 ${this.pointer} = ${pointer1} * ${pointer2};`, comment); // pointer = pointer1 + pointer2;
             this.appendLine(`${this.pointer} = ${val};`);
+            OptimizationRecords.AddRecord(
+                `${this.pointer} = ${pointer1} * ${pointer2};`,
+                `${this.pointer} = ${val};`,
+                12
+            );
             //this.RemoveTmpIfItsUsed(pointer1, pointer2);
             return
         }
@@ -128,6 +159,11 @@ export class Code {
             this.appendLine(`// OPTIMIZADO POR REGLA 14 ${this.pointer} = ${pointer1} * ${pointer2};`, comment); // pointer = pointer1 + pointer2;
             this.appendSuma(val, val, comment);
             //this.RemoveTmpIfItsUsed(pointer1, pointer2);
+            OptimizationRecords.AddRecord(
+                `${this.pointer} = ${pointer1} * ${pointer2};`,
+                `${this.pointer} = ${val} + ${val};`,
+                14
+            );
             return
         }
         if (Code.optimizado
@@ -137,6 +173,11 @@ export class Code {
             this.appendLine(`// OPTIMIZADO POR REGLA 15 ${this.pointer} = ${pointer1} * ${pointer2};`, comment); // pointer = pointer1 + pointer2;
             this.appendLine(`${this.pointer} = 0;`, comment);
             //this.RemoveTmpIfItsUsed(pointer1, pointer2);
+            OptimizationRecords.AddRecord(
+                `${this.pointer} = ${pointer1} * ${pointer2};`,
+                `${this.pointer} = 0;`,
+                15
+            );
             return
         }
         this.appendLine(`${this.pointer} = ${pointer1} * ${pointer2};`, comment); // pointer = pointer1 * pointer2;
@@ -153,6 +194,11 @@ export class Code {
         ) {
             this.appendLine(`// ELIMINADO POR REGLA 9 ${this.pointer} = ${pointer1} / ${pointer2};`, comment); // pointer = pointer1 + pointer2;
             //this.RemoveTmpIfItsUsed(pointer1, pointer2);
+            OptimizationRecords.AddRecord(
+                `${this.pointer} = ${pointer1} / ${pointer2};`,
+                'DELETED',
+                9
+            );
             return
         }
         if (Code.optimizado
@@ -161,6 +207,11 @@ export class Code {
             this.appendLine(`// OPTIMIZADO POR REGLA 13 ${this.pointer} = ${pointer1} / ${pointer2};`, comment); // pointer = pointer1 + pointer2;
             this.appendLine(`${this.pointer} = ${pointer1};`);
             //this.RemoveTmpIfItsUsed(pointer1, pointer2);
+            OptimizationRecords.AddRecord(
+                `${this.pointer} = ${pointer1} / ${pointer2};`,
+                `${this.pointer} = ${pointer1};`,
+                13
+            );
             return
         }
         if (Code.optimizado
@@ -170,6 +221,11 @@ export class Code {
             this.appendLine(`// OPTIMIZADO POR REGLA 16 ${this.pointer} = ${pointer1} / ${pointer2};`, comment); // pointer = pointer1 + pointer2;
             this.appendLine(`${this.pointer} = 0;`, comment);
             //this.RemoveTmpIfItsUsed(pointer1, pointer2);
+            OptimizationRecords.AddRecord(
+                `${this.pointer} = ${pointer1} / ${pointer2};`,
+                `${this.pointer} = 0;`,
+                16
+            );
             return
         }
         this.appendLine(`${this.pointer} = ${pointer1} / ${pointer2};`, comment); // pointer = pointer1 / pointer2;

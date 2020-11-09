@@ -93,13 +93,13 @@
                         <thead>
                         <tr>
                             <th>No.</th>
-                            <th>Prev Line<th>
+                            <th>Prev Line</th>
                             <th>New Line</th>
                             <th>Rule</th>
                             <th>Line Number</th>
                         </tr>
                         </thead>
-                        <tbody id="table-body">
+                        <tbody id="table-body-opt">
                         </tbody>
                     </table>
                 </div>
@@ -248,6 +248,22 @@
                 });
             }
 
+            function setOptimization() {
+                const table = $('#table-body-opt');
+                ast.OptimizationRecords.GetRecords().forEach((error, index) => {
+                    table.append
+                    (
+                        `<tr>
+                            <td>${index + 1}</td>
+                            <td>${error.prevLine}</td>
+                            <td>${error.newLine}</td>
+                            <td>${error.rule}</td>
+                            <td>${error.lineNo}</td>
+                        </tr>`
+                    );
+                });
+            }
+
             let c = $('#c3d');
             c.text('');
             let c2 = $('#c3d-optimizado');
@@ -285,6 +301,7 @@
                 scrollToErrors();
             } else {
                 scrollToC3D();
+                setOptimization();
             }
 
 

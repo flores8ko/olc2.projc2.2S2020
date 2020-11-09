@@ -153,6 +153,7 @@ export {
 
     FunctionCallNode,
     ErrorsControl,
+    OptimizationRecords
 }
 
 export function ExecuteAST(sentences: Array<Op>) {
@@ -174,6 +175,7 @@ export function ExecuteAST(sentences: Array<Op>) {
 export function GetC3DCode(sentences: Array<Op>): string {
     Lbl.resetCount();
     Tmp.resetCount();
+    OptimizationRecords.clearRecords();
     const tmps = Tmp.getCount();
     let CCode = "";
 
@@ -212,6 +214,7 @@ export function GetC3DCode(sentences: Array<Op>): string {
 export function GetC3DCodeOptimizado(sentences: Array<Op>): string {
     Lbl.resetCount();
     Tmp.resetCount();
+    OptimizationRecords.clearRecords();
     const tmps = Tmp.getCount();
     let CCode = "";
 
