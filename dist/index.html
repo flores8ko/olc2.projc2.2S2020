@@ -30,10 +30,11 @@
             <div style="background-color: #2BBBAD" class="nav-wrapper">
                 <a href="#!" class="brand-logo">OLC2 P2 2S2020</a>
                 <ul class="right hide-on-med-and-down">
+                    <li><a id="go-to-text-editor">Text Editor</a></li>
                     <li><a id="go-to-c3d">C3D</a></li>
+                    <li><a id="go-to-optimization">Optimization Rules</a></li>
                     <li><a id="go-to-console">Console</a></li>
                     <li><a id="go-to-errors">Errors</a></li>
-                    <li><a id="go-to-text-editor">Text Editor</a></li>
                 </ul>
             </div>
         </nav>
@@ -83,6 +84,25 @@
                 </div>
                 <p style="color: white"><b>NOTE</b>: For execute this Code go to this <a
                         href="./graph.html">LINK</a>, and CTRL+V on the text editor.</p>
+            </div>
+            <div style="padding-top: 7vh" id="optimization-header" class="input-field col s12">
+                <h4 style="background-color: #2BBBAD; color: white; padding-top: 0.3em; padding-bottom: 0.3em">
+                 Optimization Rules</h4>
+                <div style="height: 70vh; overflow: scroll">
+                    <table style="color: white;">
+                        <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Prev Line<th>
+                            <th>New Line</th>
+                            <th>Rule</th>
+                            <th>Line Number</th>
+                        </tr>
+                        </thead>
+                        <tbody id="table-body">
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <div style="padding-top: 7vh" id="console-header" class="input-field col s12">
                 <h4 style="background-color: #2BBBAD; color: white; padding-top: 0.3em; padding-bottom: 0.3em">
@@ -175,6 +195,12 @@
             }, scrollFactor);
         }
 
+        function scrollToOptimizationRecords() {
+            $('html, body').animate({
+                scrollTop: $("#optimization-header").offset().top
+            }, scrollFactor);
+        }
+
         $('#go-to-console').click((e) => {
             e.preventDefault();
             scrollToConsole();
@@ -193,6 +219,11 @@
         $('#go-to-errors').click((e) => {
             e.preventDefault();
             scrollToErrors();
+        });
+
+        $('#go-to-optimization').click((e) => {
+            e.preventDefault();
+            scrollToOptimizationRecords();
         });
 
         $('#translate-c3d').click((e) => {
