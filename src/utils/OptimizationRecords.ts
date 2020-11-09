@@ -12,13 +12,15 @@ export class OptimizationRecords {
     public static AddRecord(
         prevLine: string,
         newLine: string,
-        rule: number
+        rule: number,
+        lineNo: number = 0
     ): void{
         OptimizationRecords.records.push(
             new OptimizationRecord(
                 prevLine,
                 newLine,
-                rule
+                rule,
+                lineNo
             )
         );
     }
@@ -28,14 +30,17 @@ export class OptimizationRecord {
     private readonly prevLine: string;
     private readonly newLine: string;
     private rule: number;
+    private lineNo: number;
 
     constructor(
         prevLine: string,
         newLine: string,
-        rule: number
+        rule: number,
+        lineNo: number = 0
     ) {
         this.prevLine = prevLine;
         this.newLine = newLine;
         this.rule = rule;
+        this.lineNo = lineNo;
     }
 }
