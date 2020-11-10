@@ -21,11 +21,25 @@ export class DeclareFunNode extends Op {
     }
 
     public GOCode(env: Envmnt): Code {
+        let codeAns = new Code();
+        for (let sentence of this.sentences) {
+            if (sentence instanceof DeclareFunNode) {
+                try {
+                    const result = sentence.ExeCode(env);
+                    codeAns.append(result);
+                } catch (e) {
+                    console.log(e.message)
+                }
+            }
+        }
         const value = new UserDefined(this.sentences, this.params, this.type);
         const reference = new Reference();
         reference.PutValueOnReference(value);
         env.Declare(this.name, reference, true);
-        return value.GetC3DCode(env, this.name);
+        let funC3D = value.GetC3DCode(env, this.name);
+        codeAns.append(funC3D);
+        codeAns.setValue(funC3D.getValue());
+        return codeAns;
     }
 
     GO(env: Envmnt): object {
