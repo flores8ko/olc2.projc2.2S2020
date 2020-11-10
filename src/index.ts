@@ -67,6 +67,7 @@ import {Lbl} from "./utils/C3D/Lbl";
 import {Tmp} from "./utils/C3D/Tmp";
 import {Code} from "./utils/C3D/Code";
 import {OptimizationRecords} from "./utils/OptimizationRecords";
+import { NewArrayNode } from "./nodes/NewArrayNode";
 
 export {
     Console,
@@ -150,6 +151,8 @@ export {
     DeclareFunNode,
     DeclareFunParamNode,
     ReturnNode,
+
+    NewArrayNode,
 
     FunctionCallNode,
     ErrorsControl,

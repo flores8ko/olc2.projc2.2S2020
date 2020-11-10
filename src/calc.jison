@@ -32,7 +32,8 @@ JavaStringLiteral               ('"' {StringCharacters}? '"') | ('\'' {StringCha
 'string'              return 'STRING_TYPE';
 'boolean'             return 'BOOLEAN_TYPE';
 'any'                 return 'ANY_TYPE';
-//'Array'               return 'ARRAY_TYPE';
+'new'                 return 'NEW';
+'array'               return 'ARRAY';
 'void'                return 'VOID_TYPE';
 
 "const"               return 'CONST';
@@ -119,6 +120,7 @@ JavaStringLiteral               ('"' {StringCharacters}? '"') | ('\'' {StringCha
 %left '+' '-'
 %left '*' '/' '%'
 %left '**'
+%right 'new'
 %right UMINUS
 %right '--' '++' '!'
 %left '.' '['
@@ -355,6 +357,8 @@ e
         { $$ = new ast.CreateObjFunNode(@1, $1, $3, $5); }
     | e '.' IDENTIFIER
         { $$ = new ast.CreateObjVarNode(@1, $1, $3); }
+    | 'NEW' 'ARRAY' '(' e ')'
+        { $$ = new ast.NewArrayNode(@1, $4); }
     | functionCall
         { $$ = $1; }
     | '-' e %prec UMINUS
