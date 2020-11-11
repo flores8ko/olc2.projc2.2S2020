@@ -4,7 +4,7 @@ import {Lbl} from "./Lbl";
 import {OptimizationRecords} from "../OptimizationRecords";
 
 export class Code {
-    private readonly lines: Array<string> = new Array<string>();
+    private lines: Array<string> = new Array<string>();
     private readonly asmLines: Array<string> = new Array<string>();
     private readonly asmProcLines: Array<string> = new Array<string>();
     public static optimizado = false;
@@ -13,9 +13,24 @@ export class Code {
     private value: Cntnr;
     private pointer: string;
 
-    constructor(...codes: Code[]) {
+    constructor(...codes: Code[] | string []) {
         for (let code of codes) {
-            this.append(code);
+            if(code instanceof Code) {
+                this.append(code);
+            }else{
+                this.appendLine(code);
+            }
+        }
+    }
+
+    public CommentMe(rule: number = undefined){
+        this.lines =  this.lines.map(line => `//${line}`);
+        if (rule != undefined) {
+            let header =
+                "// ---------------------------------------------------------\n" +
+                `// |                      REGLA ${rule}                          |\n` +
+                "// ---------------------------------------------------------"
+            this.lines = [header].concat(this.lines);
         }
     }
 

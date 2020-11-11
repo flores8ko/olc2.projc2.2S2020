@@ -68,6 +68,7 @@ import {Tmp} from "./utils/C3D/Tmp";
 import {Code} from "./utils/C3D/Code";
 import {OptimizationRecords} from "./utils/OptimizationRecords";
 import { NewArrayNode } from "./nodes/NewArrayNode";
+import {OpimizarionByBlocks} from "./utils/BlocksOptimization";
 
 export {
     Console,
@@ -223,11 +224,14 @@ export function GetC3DCodeOptimizado(sentences: Array<Op>): string {
 
     const env = new Envmnt(null, sentences);
     Code.optimizado = true;
-    const codeTypes = env.GO_ALL_TYPES();
-    const codeGlobVars = env.GO_ALL_GLOBAL_VAR(null);
-    const codeFunctions = env.GO_ALL_CODE_FUN();
-    const code = env.GO_ALL_CODE();
+    let codeTypes = env.GO_ALL_TYPES();
+    let codeGlobVars = env.GO_ALL_GLOBAL_VAR(null);
+    let codeFunctions = env.GO_ALL_CODE_FUN();
+    let code = env.GO_ALL_CODE();
     Code.optimizado = false;
+
+    codeGlobVars = OpimizarionByBlocks(codeGlobVars);
+    code = OpimizarionByBlocks(code);
 
     CCode += "#include <stdio.h> //Importar para el uso de Printf\n" +
         "double HEAP[99999999]; //Estructura para heap \n" +
