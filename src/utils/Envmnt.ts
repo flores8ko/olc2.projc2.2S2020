@@ -17,8 +17,8 @@ export class Envmnt extends Cntnr {
     constructor(owner: Cntnr, operations: Array<Op>, startLabel: string = "", endLabel: string = "", exitLabel = "", returnVarRefName = "") {
         super(owner);
         this.operations = operations;
-        this.StartLabel = startLabel;
-        this.EndLabel = endLabel;
+        this.StartLabel = startLabel === "" ? owner ? owner.StartLabel : startLabel : startLabel;
+        this.EndLabel = endLabel === "" ? owner ? owner.EndLabel : endLabel : endLabel;
         this.ExitLabel = owner ? owner.ExitLabel !== "" ? owner.ExitLabel : exitLabel : exitLabel;
         this.returnVarRefName = owner ? owner.returnVarRefName !== "" ? owner.returnVarRefName : returnVarRefName : returnVarRefName;
         this.typo = "Ambito";

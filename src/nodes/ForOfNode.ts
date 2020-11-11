@@ -26,7 +26,10 @@ export class ForOfNode extends Op {
         let valType = t ? (t as Reference).getValue().typo : undefined;
         valType = valType ? valType : val.getContentType();
 
-        const env0 = new Envmnt(env, this.sentences);
+        let startLbl = Lbl.newLbl();
+        let endLbl = Lbl.newLbl();
+
+        const env0 = new Envmnt(env, this.sentences, startLbl, endLbl);
         if (this.newControlVar) {
             // env0.AddProperty(this.controlVar, new Reference(valType, false, true));
             env0.AddProperty(this.controlVar, t ? t : new Reference(valType, false, true));
@@ -36,8 +39,6 @@ export class ForOfNode extends Op {
 
         codeAns.append(arrayCode);
 
-        let startLbl = Lbl.newLbl();
-        let endLbl = Lbl.newLbl();
 
         let controlTmp = new Code();
         controlTmp.setPointer(Tmp.newTmp());

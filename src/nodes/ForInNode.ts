@@ -26,7 +26,12 @@ export class ForInNode extends Op {
         let valType = t ? (t as Reference).getValue().typo : undefined;
         valType = valType ? valType : val.getContentType();
 
-        const env0 = new Envmnt(env, this.sentences);
+
+        let startLbl = Lbl.newLbl();
+        let endLbl = Lbl.newLbl();
+
+
+        const env0 = new Envmnt(env, this.sentences, startLbl, endLbl);
         if (this.newControlVar) {
             env0.AddProperty(this.controlVar, new Reference("NUMBER", false, true));
         }
@@ -35,8 +40,6 @@ export class ForInNode extends Op {
 
         codeAns.append(arrayCode);
 
-        let startLbl = Lbl.newLbl();
-        let endLbl = Lbl.newLbl();
 
         let controlTmp = new Code();
         controlTmp.setPointer(Tmp.newTmp());

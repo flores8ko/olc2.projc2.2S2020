@@ -32,7 +32,7 @@ export class IfNode extends Op {
         codeIf.appendJE(cond.getPointer(), "0", lblFalse, "IF START"); // if condition value == 0 then jmp to lblFalse
 
         //true Sentences
-        const evTrue = new Envmnt(env, this.operationsTrue, "", lblEnd);
+        const evTrue = new Envmnt(env, this.operationsTrue);
         //Utils.PassPropsAndFuncs(env, evTrue);
         const codeTrue = evTrue.GO_ALL_CODE();
         codeIf.appendSplitComment("true statements");
@@ -40,7 +40,7 @@ export class IfNode extends Op {
         codeIf.appendJMP(lblEnd);
 
         //false Sentences
-        const evFalse = new Envmnt(env, this.operationsFalse, "", lblEnd);
+        const evFalse = new Envmnt(env, this.operationsFalse);
         //Utils.PassPropsAndFuncs(env, evFalse);
         const codeFalse = evFalse.GO_ALL_CODE();
         codeIf.appendSplitComment("false statements");
