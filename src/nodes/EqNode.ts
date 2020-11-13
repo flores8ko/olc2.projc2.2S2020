@@ -25,6 +25,7 @@ export class EqNode extends Op {
         if (codeLf.getValue() instanceof STRING && codeRt.getValue() instanceof STRING) {
             const codeStrLf = new Code();
             const codeStrRt = new Code();
+            let nonEq = Lbl.newLbl();
 
             codeStrLf.setPointer(Tmp.newTmp());
             codeStrRt.setPointer(Tmp.newTmp());
@@ -33,7 +34,48 @@ export class EqNode extends Op {
             codeStrRt.GetFromHeap(codeRt.getPointer(), "obtiene tamaño str2");
             codeAns.append(codeStrLf);
             codeAns.append(codeStrRt);
-            codeAns.appendJE(codeStrLf.getPointer(), codeStrRt.getPointer(), lbl, "mismo tamaño");
+            codeAns.appendJNE(codeStrLf.getPointer(), codeStrRt.getPointer(), nonEq, "no mismo tamaño, salto a falso");
+
+            const codeLfIndex = new Code();
+            const codeRtIndex = new Code();
+
+            codeLfIndex.setPointer(Tmp.newTmp());
+            codeRtIndex.setPointer(Tmp.newTmp());
+
+            codeLfIndex.appendSuma(codeLf.getPointer(), "1", "indice str1");
+            codeRtIndex.appendSuma(codeRt.getPointer(), "1", "indice str2");
+
+            codeAns.append(codeLfIndex);
+            codeAns.append(codeRtIndex);
+
+            let whileStart = Lbl.newLbl();
+            let whileEnd = Lbl.newLbl();
+
+            const codeWhile = new Code();
+            codeWhile.setPointer(Tmp.newTmp());
+            codeWhile.appendValueToPointer("0", "control de comparacion");
+            codeWhile.appendLabel(whileStart);
+            const codeHeapLf = new Code();
+            const codeHeapRt = new Code();
+            codeHeapLf.setPointer(Tmp.newTmp());
+            codeHeapRt.setPointer(Tmp.newTmp());
+
+            codeHeapLf.GetFromHeap(codeLfIndex.getPointer(), "str1 char");
+            codeHeapRt.GetFromHeap(codeRtIndex.getPointer(), "str2 char");
+
+            codeWhile.append(codeHeapLf);
+            codeWhile.append(codeHeapRt);
+            codeWhile.appendJNE(codeHeapLf.getPointer(), codeHeapRt.getPointer(), nonEq, "diferente char, salto a false");
+
+
+            codeWhile.appendLine(`${codeLfIndex.getPointer()} = ${codeLfIndex.getPointer()} + 1;`, "aumenta indice str1")
+            codeWhile.appendLine(`${codeRtIndex.getPointer()} = ${codeRtIndex.getPointer()} + 1;`, "aumenta indice str2");
+            codeWhile.appendSuma(codeWhile.getPointer(), "1", "aumento indice control");
+            codeWhile.appendJL(codeWhile.getPointer(), codeStrLf.getPointer(), whileStart);
+            codeWhile.appendJMP(lbl, "todo bien salto a true");
+
+            codeAns.append(codeWhile);
+            codeAns.appendLabel(nonEq);
             codeAns.appendValueToPointer("0");
             codeAns.appendLabel(lbl);
         }else {
