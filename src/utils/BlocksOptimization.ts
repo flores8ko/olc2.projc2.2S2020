@@ -14,7 +14,12 @@ export function OpimizarionByBlocks(code: Code): Code {
             Blocks.push(new Code(...blockLines));
             blockLines = new Array<string>();
             Blocks.push(new Code(...[line]));
-        } else if (!line.startsWith("L")) {
+        } else if (line.startsWith("if")) {
+            Blocks.push(new Code(...blockLines));
+            blockLines = new Array<string>();
+            Blocks.push(new Code(...[line]));
+        }
+        else if (!line.startsWith("L")) {
             blockLines.push(line);
         } else {
             Blocks.push(new Code(...blockLines));
@@ -41,6 +46,55 @@ export function OpimizarionByBlocks(code: Code): Code {
             if (!containsLabel) {
                 Blocks[i + 1].CommentMe(1);
             }
+        }
+    }
+
+    //REGLA 3
+    // for (let i = 0; i<Blocks.length; i++) {
+    //     let block = Blocks[i];
+    //     if (block.getText().startsWith("if")) {
+    //         let header = block.getLines()[0]
+    //         let parts = header.split(" ");
+    //         let p1 = parts[0].split("(")[1];
+    //         let sign = parts[1];
+    //         let p2 = parts[2].split(")")[0];
+    //         let lbl = parts[4].split(";")[0];
+    //         if (p1.startsWith("t") || p2.startsWith("t")) {
+    //             return;
+    //         }
+    //         if (compare(p1, p2, sign)) {
+    //             i++;
+    //             block = Blocks[i];
+    //             while (!block.getText().startsWith(lbl)) {
+    //                 block.CommentMe(2);
+    //                 i++;
+    //                 block = Blocks[i];
+    //             }
+    //         }else{
+    //
+    //         }
+    //         console.log(p1, sign, p2);
+    //     }
+    // }
+
+    function compare(p1s: string, p2s: string, sign: string): boolean {
+        let p1 = +p1s;
+        let p2 = +p2s;
+        switch (sign) {
+            case "==":
+                return p1 == p2;
+            case "!=":
+                return p1 != p2;
+            case "<":
+                return p1 < p2;
+            case ">":
+                return p1 > p2;
+            case "<=":
+                return p1 <= p2;
+            case ">=":
+                return p1 >= p2;
+            default:
+                return false;
         }
     }
 

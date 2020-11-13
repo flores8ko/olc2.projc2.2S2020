@@ -44,7 +44,7 @@ export class Code {
     }
 
     public appendLine(line: string, comment: string = "") {
-        comment = comment !== "" ? `\t// ${comment}` : "";
+        comment = comment !== "" ? `\t/* ${comment} */` : "";
         this.lines.push(`${line} ${comment}`);
     }
 

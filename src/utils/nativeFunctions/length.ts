@@ -14,7 +14,7 @@ export class Length extends Native {
         const codeAns = new Code(code);
         codeAns.setPointer(Tmp.newTmp());
         codeAns.appendValueToPointer(this.array.getValueList().length);
-        codeAns.setValue(new NUMBER());
+        codeAns.setValue(new NUMBER(this.array.getValueList().length));
         return codeAns;
     }
     private readonly array: ARRAY;
