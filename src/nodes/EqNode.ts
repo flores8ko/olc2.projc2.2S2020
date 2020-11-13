@@ -7,6 +7,7 @@ import { Code } from "../utils/C3D/Code";
 import {GetReferenceValueCode} from "../utils/Utils";
 import {Tmp} from "../utils/C3D/Tmp";
 import {Lbl} from "../utils/C3D/Lbl";
+import {STRING} from "../utils/PrimitiveTypoContainer";
 
 export class EqNode extends Op {
     private readonly lf: Op;
@@ -18,13 +19,29 @@ export class EqNode extends Op {
 
         const codeAns = new Code(codeLf, codeRt);
         codeAns.setPointer(Tmp.newTmp());
-        codeAns.appendValueToPointer("1");
-        const lbl = Lbl.newLbl();
-        codeAns.appendJE(codeLf.getPointer(), codeRt.getPointer(), lbl);
-        codeAns.appendValueToPointer("0");
-        codeAns.appendLabel(lbl);
-
         codeAns.setValue(Igual(codeLf.getValue(), codeRt.getValue()));
+        const lbl = Lbl.newLbl();
+        codeAns.appendValueToPointer("1");
+        if (codeLf.getValue() instanceof STRING && codeRt.getValue() instanceof STRING) {
+            const codeStrLf = new Code();
+            const codeStrRt = new Code();
+
+            codeStrLf.setPointer(Tmp.newTmp());
+            codeStrRt.setPointer(Tmp.newTmp());
+
+            codeStrLf.GetFromHeap(codeLf.getPointer(), "obtiene tamaño str1");
+            codeStrRt.GetFromHeap(codeRt.getPointer(), "obtiene tamaño str2");
+            codeAns.append(codeStrLf);
+            codeAns.append(codeStrRt);
+            codeAns.appendJE(codeStrLf.getPointer(), codeStrRt.getPointer(), lbl, "mismo tamaño");
+            codeAns.appendValueToPointer("0");
+            codeAns.appendLabel(lbl);
+        }else {
+            codeAns.appendJE(codeLf.getPointer(), codeRt.getPointer(), lbl);
+            codeAns.appendValueToPointer("0");
+            codeAns.appendLabel(lbl);
+        }
+
 
         //TODO tmpmanager ??
         return codeAns;
