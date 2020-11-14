@@ -1,4 +1,5 @@
 import {Code} from "./C3D/Code";
+import {BlocksControlReport} from "./BlocksControlReport";
 
 export function OpimizarionByBlocks(code: Code): Code {
     const Blocks = new Array<Code>();
@@ -90,6 +91,9 @@ export function OpimizarionByBlocks(code: Code): Code {
         }
     }
 
+    for (let block of Blocks) {
+        BlocksControlReport.AddBlock(block.getText());
+    }
 
     const retCode = new Code(...Blocks);
     return retCode;

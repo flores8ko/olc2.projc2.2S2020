@@ -104,6 +104,22 @@
                     </table>
                 </div>
             </div>
+            <div style="padding-top: 7vh" id="optimization-header-blocks" class="input-field col s12">
+                <h4 style="background-color: #2BBBAD; color: white; padding-top: 0.3em; padding-bottom: 0.3em">
+                    Blocks</h4>
+                <div style="height: 70vh; overflow: scroll">
+                    <table style="color: white;">
+                        <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Block</th>
+                        </tr>
+                        </thead>
+                        <tbody id="table-body-blocks">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
             <div style="padding-top: 7vh" id="console-header" class="input-field col s12">
                 <h4 style="background-color: #2BBBAD; color: white; padding-top: 0.3em; padding-bottom: 0.3em">
                     Console</h4>
@@ -264,6 +280,19 @@
                 });
             }
 
+            function setBlocks() {
+                const table = $('#table-body-blocks');
+                ast.BlocksControlReport.GetBlocks().forEach((block, index) => {
+                    table.append
+                    (
+                        `<tr>
+                            <td>${index + 1}</td>
+                            <td>${block.replace(/\\\\n/g, "&#13;&#10;       ").replace(/\\\\t/g, "&#9;")}</td>
+                        </tr>`
+                    );
+                });
+            }
+
             let c = $('#c3d');
             c.text('');
             let c2 = $('#c3d-optimizado');
@@ -302,6 +331,7 @@
             } else {
                 scrollToC3D();
                 setOptimization();
+                setBlocks();
             }
 
 

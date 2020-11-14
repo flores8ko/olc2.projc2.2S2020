@@ -69,6 +69,7 @@ import {Code} from "./utils/C3D/Code";
 import {OptimizationRecords} from "./utils/OptimizationRecords";
 import { NewArrayNode } from "./nodes/NewArrayNode";
 import {OpimizarionByBlocks} from "./utils/BlocksOptimization";
+import { BlocksControlReport } from "./utils/BlocksControlReport";
 
 export {
     Console,
@@ -157,7 +158,8 @@ export {
 
     FunctionCallNode,
     ErrorsControl,
-    OptimizationRecords
+    OptimizationRecords,
+    BlocksControlReport
 }
 
 export function ExecuteAST(sentences: Array<Op>) {
