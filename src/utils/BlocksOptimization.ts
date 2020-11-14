@@ -49,33 +49,25 @@ export function OpimizarionByBlocks(code: Code): Code {
         }
     }
 
-    //REGLA 3
-    // for (let i = 0; i<Blocks.length; i++) {
-    //     let block = Blocks[i];
-    //     if (block.getText().startsWith("if")) {
-    //         let header = block.getLines()[0]
-    //         let parts = header.split(" ");
-    //         let p1 = parts[0].split("(")[1];
-    //         let sign = parts[1];
-    //         let p2 = parts[2].split(")")[0];
-    //         let lbl = parts[4].split(";")[0];
-    //         if (p1.startsWith("t") || p2.startsWith("t")) {
-    //             return;
-    //         }
-    //         if (compare(p1, p2, sign)) {
-    //             i++;
-    //             block = Blocks[i];
-    //             while (!block.getText().startsWith(lbl)) {
-    //                 block.CommentMe(2);
-    //                 i++;
-    //                 block = Blocks[i];
-    //             }
-    //         }else{
-    //
-    //         }
-    //         console.log(p1, sign, p2);
-    //     }
-    // }
+    for (let i = 0; i<Blocks.length; i++) {
+        let block = Blocks[i];
+        if (block.getText().startsWith("if")) {
+            let header = block.getLines()[0]
+            let parts = header.split(" ");
+            let p1 = parts[0].split("(")[1];
+            let sign = parts[1];
+            let p2 = parts[2].split(")")[0];
+            let lbl = parts[4].split(";")[0];
+            if (p1.startsWith("t") || p2.startsWith("t")) {
+
+            }
+            else if (compare(p1, p2, sign)) {
+                block.CommentMe(3, true);
+            }else{
+                block.CommentMe(4);
+            }
+        }
+    }
 
     function compare(p1s: string, p2s: string, sign: string): boolean {
         let p1 = +p1s;

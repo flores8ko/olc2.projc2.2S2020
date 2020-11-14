@@ -23,8 +23,10 @@ export class Code {
         }
     }
 
-    public CommentMe(rule: number = undefined){
-        this.lines =  this.lines.map(line => `//${line}`);
+    public CommentMe(rule: number = undefined, onlyHeader: boolean = false){
+        if(!onlyHeader) {
+            this.lines = this.lines.map(line => `//${line}`);
+        }
         if (rule != undefined) {
             let header =
                 "// ---------------------------------------------------------\n" +
